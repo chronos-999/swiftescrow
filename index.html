@@ -1,0 +1,964 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Swift Escrow & Swap</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" />
+  <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+  <style id="app-style">
+    :root {
+      --primary-color: #00e5ff;
+      --secondary-color: #ff7b00;
+      --dark-bg: #121212;
+      --card-bg: #1e1e1e;
+      --text-color: #ffffff;
+    }
+
+    body {
+      font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+      background-color: var(--dark-bg);
+      color: var(--text-color);
+    }
+
+    .marquee {
+      white-space: nowrap;
+      overflow: hidden;
+      position: relative;
+      background-color: var(--secondary-color);
+    }
+
+    .marquee span {
+      display: inline-block;
+      padding-left: 100%;
+      animation: marquee 15s linear infinite;
+    }
+
+    @keyframes marquee {
+      0% {
+        transform: translate(0, 0);
+      }
+      100% {
+        transform: translate(-100%, 0);
+      }
+    }
+
+    .nav-link {
+      position: relative;
+      line-height: 1.5;
+      color: var(--text-color);
+      padding: 0.5rem 1rem;
+      transition: color 0.3s;
+    }
+
+    .nav-link:after {
+      content: '';
+      position: absolute;
+      width: 0;
+      height: 2px;
+      bottom: 0;
+      left: 50%;
+      background-color: var(--primary-color);
+      transition: all 0.3s;
+    }
+
+    .nav-link:hover:after, .nav-link.active:after {
+      width: 80%;
+      left: 10%;
+    }
+
+    .nav-link:hover, .nav-link.active {
+      color: var(--primary-color);
+    }
+
+    .btn-gradient {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      background: linear-gradient(135deg, var(--primary-color), var(--secondary-color));
+      border: none;
+      color: white;
+      padding: 10px 20px;
+      border-radius: 30px;
+      font-weight: bold;
+      transition: transform 0.3s, box-shadow 0.3s;
+      box-shadow: 0 4px 6px rgba(0, 229, 255, 0.1);
+    }
+    
+    .btn-gradient i {
+      margin-right: 0.5rem;
+    }
+    
+    .review-stars i {
+      margin-right: 0.25rem;
+    }
+
+    .card {
+      background-color: var(--card-bg);
+      border-radius: 10px;
+      box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+      padding: 20px;
+      transition: transform 0.3s, box-shadow 0.3s;
+    }
+
+    .card:hover {
+      transform: translateY(-5px);
+      box-shadow: 0 8px 15px rgba(0, 229, 255, 0.2);
+    }
+
+    .stats-item {
+      border-left: 4px solid var(--primary-color);
+      padding-left: 15px;
+    }
+
+    .accordion-header {
+      cursor: pointer;
+      padding: 15px;
+      background-color: rgba(0, 229, 255, 0.05);
+      border-radius: 8px;
+      transition: background-color 0.3s;
+    }
+
+    .accordion-header:hover {
+      background-color: rgba(0, 229, 255, 0.1);
+    }
+
+    .accordion-content {
+      max-height: 0;
+      overflow: hidden;
+      transition: max-height 0.3s ease-out;
+      padding: 0 15px;
+    }
+
+    .accordion-content.active {
+      max-height: 300px;
+      padding: 15px;
+    }
+
+    .form-input {
+      background-color: rgba(255, 255, 255, 0.05);
+      border: 1px solid rgba(255, 255, 255, 0.1);
+      border-radius: 8px;
+      padding: 10px 15px;
+      color: var(--text-color);
+      transition: border-color 0.3s;
+    }
+
+    .form-input:focus {
+      border-color: var(--primary-color);
+      outline: none;
+    }
+
+    .form-label {
+      font-size: 0.9rem;
+      margin-bottom: 5px;
+      color: rgba(255, 255, 255, 0.8);
+    }
+
+    .wallet-address {
+      background-color: rgba(255, 255, 255, 0.05);
+      padding: 15px;
+      border-radius: 8px;
+      font-family: monospace;
+      border: 1px dashed var(--primary-color);
+      user-select: all;
+    }
+
+    .section {
+      display: none;
+      opacity: 0;
+      transition: opacity 0.5s ease-in-out;
+    }
+
+    .section.active {
+      display: block;
+      opacity: 1;
+    }
+
+    .status-indicator {
+      display: inline-block;
+      width: 12px;
+      height: 12px;
+      border-radius: 50%;
+    }
+
+    .status-pending {
+      background-color: var(--secondary-color);
+      animation: pulse 1.5s infinite;
+    }
+
+    .status-confirmed {
+      background-color: #00ff88;
+    }
+
+    @keyframes pulse {
+      0% {
+        opacity: 0.6;
+      }
+      50% {
+        opacity: 1;
+      }
+      100% {
+        opacity: 0.6;
+      }
+    }
+
+    .logo {
+      font-weight: 800;
+      background: linear-gradient(135deg, var(--primary-color), var(--secondary-color));
+      background-clip: text;
+      background-origin: border-box;
+      color: transparent;
+      letter-spacing: -1px;
+    }
+
+    .step {
+      position: relative;
+      padding-left: 30px;
+      margin-bottom: 20px;
+    }
+
+    .step:before {
+      content: '';
+      position: absolute;
+      left: 0;
+      top: 5px;
+      width: 20px;
+      height: 20px;
+      background-color: var(--primary-color);
+      border-radius: 50%;
+    }
+
+    .step:after {
+      content: '';
+      position: absolute;
+      left: 10px;
+      top: 25px;
+      width: 2px;
+      height: calc(100% - 10px);
+      background-color: var(--primary-color);
+    }
+
+    .step:last-child:after {
+      display: none;
+    }
+
+    .review-stars {
+      display: flex;
+      align-items: center;
+    }
+    
+    .review-stars i {
+      margin-right: 0.25rem;
+      font-size: 1rem;
+    }
+  </style>
+</head>
+<body>
+  <!-- Marquee Banner -->
+  <div class="marquee py-2 bg-amber-600 text-white font-semibold">
+    <span>Turn on JavaScript to experience full features</span>
+  </div>
+
+  <!-- Navigation -->
+  <nav class="sticky top-0 z-50 bg-gray-900 shadow-lg">
+    <div class="container mx-auto px-4 py-3 flex flex-wrap justify-between items-center">
+      <div class="flex items-center">
+        <h1 class="text-2xl logo">Swift Escrow & Swap</h1>
+      </div>
+
+      <div class="flex flex-wrap items-center mt-2 md:mt-0">
+        <a href="#home" class="nav-link active" data-section="home">Home</a>
+        <a href="#about" class="nav-link" data-section="about">About Us</a>
+        <a href="#what-is-escrow" class="nav-link" data-section="what-is-escrow">What is Escrow</a>
+        <a href="#order" class="nav-link" data-section="order">Order</a>
+        <a href="#swap" class="nav-link" data-section="swap">Swap Coin</a>
+        <a href="#contact" class="nav-link" data-section="contact">Contact Us</a>
+        <a href="#reviews" class="nav-link" data-section="reviews">Reviews</a>
+      </div>
+    </div>
+  </nav>
+
+  <!-- Main Content -->
+  <main class="container mx-auto px-4 py-8">
+    <!-- Home Section -->
+    <section id="home" class="section active py-8">
+      <div class="flex flex-col md:flex-row items-center justify-between">
+        <div class="md:w-1/2 mb-8 md:mb-0">
+          <h2 class="text-4xl font-bold mb-4">Secure Transactions <br>Powered by Technology</h2>
+          <p class="text-lg text-gray-300 mb-6">Swift Escrow & Swap provides a safe platform for your cryptocurrency transactions with instant Bitcoin to Monero swaps.</p>
+          <div class="flex flex-col sm:flex-row gap-4">
+            <a href="#order" class="btn-gradient w-full sm:w-auto" data-section="order"><i class="fas fa-lock"></i> Start an Escrow</a>
+            <a href="#swap" class="btn-gradient w-full sm:w-auto" data-section="swap"><i class="fas fa-exchange-alt"></i> Swap Coins</a>
+          </div>
+        </div>
+
+        <div class="md:w-1/2">
+          <img src="https://cdn.pixabay.com/photo/2017/12/12/12/44/bitcoin-3014614_1280.jpg" alt="Cryptocurrency" class="rounded-lg w-full shadow-lg" />
+        </div>
+      </div>
+
+      <div class="grid grid-cols-1 md:grid-cols-2 gap-8 mt-16">
+        <div class="card stats-item">
+          <h3 class="text-xl font-semibold mb-2">Customers Served</h3>
+          <p class="text-4xl font-bold text-primary-color mb-2">15,000+</p>
+          <p class="text-gray-400">Trusted by clients worldwide</p>
+        </div>
+
+        <div class="card stats-item">
+          <h3 class="text-xl font-semibold mb-2">Amount Handled</h3>
+          <p class="text-4xl font-bold text-secondary-color mb-2">$250M+</p>
+          <p class="text-gray-400">In secure transactions</p>
+        </div>
+      </div>
+
+      <div class="mt-16">
+        <h3 class="text-2xl font-bold mb-6">Why Choose Swift Escrow & Swap?</h3>
+        <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
+          <div class="card">
+            <div class="text-4xl text-primary-color mb-4"><i class="fas fa-shield-alt"></i></div>
+            <h4 class="text-xl font-semibold mb-2">Secure</h4>
+            <p class="text-gray-300">Advanced security protocols to keep your funds safe at all times.</p>
+          </div>
+
+          <div class="card">
+            <div class="text-4xl text-primary-color mb-4"><i class="fas fa-bolt"></i></div>
+            <h4 class="text-xl font-semibold mb-2">Fast</h4>
+            <p class="text-gray-300">Quick transaction processing with minimal wait times.</p>
+          </div>
+
+          <div class="card">
+            <div class="text-4xl text-primary-color mb-4"><i class="fas fa-user-shield"></i></div>
+            <h4 class="text-xl font-semibold mb-2">Private</h4>
+            <p class="text-gray-300">Privacy-focused solutions with secure Bitcoin to Monero swaps.</p>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- About Us Section -->
+    <section id="about" class="section py-8">
+      <h2 class="text-3xl font-bold mb-8 text-center">About Swift Escrow & Swap</h2>
+
+      <div class="card mb-8">
+        <h3 class="text-xl font-semibold mb-4">Our Mission</h3>
+        <p class="text-gray-300 mb-4">
+          At Swift Escrow & Swap, we provide a secure and reliable platform for cryptocurrency transactions. 
+          Our mission is to eliminate the risks associated with peer-to-peer transactions by acting as a trusted third party.
+        </p>
+        <p class="text-gray-300">
+          We are committed to maintaining the highest standards of security, privacy, and customer service,
+          making cryptocurrency transactions accessible and safe for everyone.
+        </p>
+      </div>
+
+      <div class="card mb-8">
+        <h3 class="text-xl font-semibold mb-4">Our Policy</h3>
+        <ul class="list-disc pl-5 text-gray-300 space-y-2">
+          <li>All escrow transactions are secured through advanced encryption.</li>
+          <li>We verify the authenticity of all parties involved in a transaction.</li>
+          <li>Funds are only released when both parties confirm that the terms of the agreement have been met.</li>
+          <li>We maintain full transparency throughout the escrow process.</li>
+          <li>Your privacy and data security are our top priorities.</li>
+          <li>Swift Escrow service fee is 5% of the transaction amount.</li>
+        </ul>
+      </div>
+
+      <div class="card">
+        <h3 class="text-xl font-semibold mb-4">Terms of Service</h3>
+        <p class="text-gray-300 mb-4">
+          By using Swift Escrow & Swap, you agree to our terms of service. These terms are designed
+          to protect all parties involved in transactions conducted through our platform.
+        </p>
+        <ul class="list-disc pl-5 text-gray-300 space-y-2">
+          <li>Users must be 18 years or older to use our services.</li>
+          <li>All transaction information provided must be accurate and complete.</li>
+          <li>Swift Escrow & Swap is not responsible for disputes arising from incomplete or inaccurate information.</li>
+          <li>We reserve the right to refuse service to anyone involved in illegal activities.</li>
+          <li>Funds will only be released according to the agreed-upon terms of the transaction.</li>
+          <li>All service fees are non-refundable once a transaction has been initiated.</li>
+        </ul>
+      </div>
+    </section>
+
+    <!-- What is Escrow Section -->
+    <section id="what-is-escrow" class="section py-8">
+      <h2 class="text-3xl font-bold mb-8 text-center">What is Escrow?</h2>
+
+      <div class="card mb-8">
+        <p class="text-gray-300 mb-6">
+          Escrow is a financial arrangement where a third party holds and regulates payment of funds for two parties
+          in a transaction. It helps make transactions more secure by keeping the payment in a secure escrow account
+          until all terms of an agreement are met.
+        </p>
+
+        <h3 class="text-xl font-semibold mb-4">How Escrow Works</h3>
+
+        <div class="space-y-6 mt-6">
+          <div class="step">
+            <h4 class="font-semibold">Step 1: Agreement</h4>
+            <p class="text-gray-300">Buyer and seller agree on terms, and the buyer initiates an escrow transaction on our platform.</p>
+          </div>
+
+          <div class="step">
+            <h4 class="font-semibold">Step 2: Secure Payment</h4>
+            <p class="text-gray-300">Buyer sends funds to Swift Escrow's secure wallet, where they are held safely.</p>
+          </div>
+
+          <div class="step">
+            <h4 class="font-semibold">Step 3: Verification</h4>
+            <p class="text-gray-300">Seller delivers goods or services to the buyer as agreed.</p>
+          </div>
+
+          <div class="step">
+            <h4 class="font-semibold">Step 4: Confirmation</h4>
+            <p class="text-gray-300">Buyer confirms receipt and satisfaction with the goods or services.</p>
+          </div>
+
+          <div class="step">
+            <h4 class="font-semibold">Step 5: Release of Funds</h4>
+            <p class="text-gray-300">Swift Escrow releases the funds to the seller, completing the transaction securely.</p>
+          </div>
+        </div>
+      </div>
+
+      <div class="card">
+        <h3 class="text-xl font-semibold mb-4">Benefits of Using Escrow</h3>
+        <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+          <div>
+            <h4 class="font-semibold text-primary-color mb-2">For Buyers:</h4>
+            <ul class="list-disc pl-5 text-gray-300 space-y-1">
+              <li>Protection from fraud</li>
+              <li>Verification of goods/services before payment</li>
+              <li>Secure payment handling</li>
+              <li>Professional dispute resolution</li>
+            </ul>
+          </div>
+
+          <div>
+            <h4 class="font-semibold text-primary-color mb-2">For Sellers:</h4>
+            <ul class="list-disc pl-5 text-gray-300 space-y-1">
+              <li>Guarantee of payment for delivered goods/services</li>
+              <li>Protection from payment reversals</li>
+              <li>Increased buyer confidence</li>
+              <li>Professional transaction management</li>
+            </ul>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- Order Section -->
+    <section id="order" class="section py-8">
+      <h2 class="text-3xl font-bold mb-8 text-center">Place an Escrow Order</h2>
+
+      <!-- Order Form Page -->
+      <div id="order-form-page" class="order-step active">
+        <div class="card">
+          <form id="escrow-form" class="space-y-4">
+            <div class="mb-4">
+              <label class="form-label">Your Role</label>
+              <div class="flex gap-4 mt-2">
+                <label class="flex items-center">
+                  <input type="radio" name="role" value="buyer" checked class="mr-2" />
+                  <span>Buyer</span>
+                </label>
+                <label class="flex items-center">
+                  <input type="radio" name="role" value="vendor" class="mr-2" />
+                  <span>Vendor</span>
+                </label>
+              </div>
+            </div>
+
+            <div class="mb-4">
+              <label for="counterparty-contact" class="form-label">Counterparty Contact (Email or Telegram handle)</label>
+              <input type="text" id="counterparty-contact" class="form-input w-full" required />
+            </div>
+
+            <div class="mb-4">
+              <label for="transaction-description" class="form-label">Transaction Description</label>
+              <textarea id="transaction-description" rows="3" class="form-input w-full" required></textarea>
+            </div>
+
+            <div class="mb-4">
+              <label for="transaction-amount" class="form-label">Amount (in Bitcoin)</label>
+              <input
+                type="number"
+                step="0.00000001"
+                min="0.0001"
+                id="transaction-amount"
+                class="form-input w-full"
+                required
+              />
+            </div>
+
+            <button type="submit" id="order-next-btn" class="btn-gradient w-full">Next</button>
+          </form>
+        </div>
+      </div>
+
+      <!-- Payment Page -->
+      <div id="order-payment-page" class="order-step hidden">
+        <div class="card">
+          <h3 class="text-xl font-semibold mb-4">Make Your Payment</h3>
+          <p class="mb-4 text-gray-300">Please send the exact Bitcoin amount to the following wallet address:</p>
+
+          <div class="wallet-address mb-4 text-center">
+            bc1qvrfgyfkcjm7us5azz8ag6qzdq9pzy5wsjf2e7r
+            <button id="copy-wallet-btn" class="ml-2 text-primary-color">
+              <i class="fas fa-copy"></i>
+            </button>
+          </div>
+
+          <p class="text-sm text-gray-400 mb-6">Once you've sent the payment, click "Proceed" to continue.</p>
+
+          <button id="order-proceed-btn" class="btn-gradient w-full mb-4">Proceed</button>
+        </div>
+      </div>
+
+      <!-- Status Page -->
+      <div id="order-status-page" class="order-step hidden">
+        <div class="card">
+          <h3 class="text-xl font-semibold mb-4">Transaction Status</h3>
+
+          <div class="flex items-center mb-6">
+            <div class="status-indicator status-pending mr-3"></div>
+            <span class="text-lg" id="status-text">Pending</span>
+          </div>
+
+          <div class="bg-gray-800 p-4 rounded-lg mb-6">
+            <h4 class="font-semibold mb-2">Transaction Details</h4>
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-y-2 text-sm text-gray-300">
+              <div>Role:</div>
+              <div id="status-role">Buyer</div>
+
+              <div>Counterparty:</div>
+              <div id="status-counterparty">-</div>
+
+              <div>Amount:</div>
+              <div id="status-amount">-</div>
+
+              <div>Description:</div>
+              <div id="status-description">-</div>
+
+              <div>Escrow ID:</div>
+              <div>ES-<span id="status-id">25791364</span></div>
+            </div>
+          </div>
+
+          <p class="text-sm text-gray-400 mb-6">
+            Your transaction is being processed. You will receive updates via email once the status changes.
+          </p>
+
+          <a href="javascript:void(0)" id="order-start-over" class="text-primary-color hover:underline">Start Over</a>
+        </div>
+      </div>
+    </section>
+
+    <!-- Swap Coin Section -->
+    <section id="swap" class="section py-8">
+      <h2 class="text-3xl font-bold mb-8 text-center">Swap Bitcoin to Monero</h2>
+
+      <!-- Swap Form Page -->
+      <div id="swap-form-page" class="swap-step active">
+        <div class="card">
+          <form id="swap-form" class="space-y-4">
+            <div class="mb-4">
+              <label for="swap-amount" class="form-label">Bitcoin Amount to Swap</label>
+              <input
+                type="number"
+                step="0.00000001"
+                min="0.0001"
+                id="swap-amount"
+                class="form-input w-full"
+                required
+              />
+            </div>
+
+            <div class="mb-4">
+              <label for="monero-address" class="form-label">Your Monero Wallet Address</label>
+              <input type="text" id="monero-address" class="form-input w-full" required />
+            </div>
+
+            <button type="submit" id="swap-next-btn" class="btn-gradient w-full">Next</button>
+          </form>
+        </div>
+      </div>
+
+      <!-- Deposit Info Page -->
+      <div id="swap-deposit-page" class="swap-step hidden">
+        <div class="card">
+          <h3 class="text-xl font-semibold mb-4">Bitcoin Deposit Information</h3>
+          <p class="mb-4 text-gray-300">
+            Please send your Bitcoin to the following wallet address:
+          </p>
+
+          <div class="wallet-address mb-4 text-center">
+            bc1qvrfgyfkcjm7us5azz8ag6qzdq9pzy5wsjf2e7r
+            <button id="copy-swap-wallet-btn" class="ml-2 text-primary-color">
+              <i class="fas fa-copy"></i>
+            </button>
+          </div>
+
+          <div class="bg-amber-900 bg-opacity-20 border border-amber-800 rounded-lg p-4 mb-6">
+            <h4 class="font-semibold text-amber-400 mb-2">Important Instructions:</h4>
+            <p class="text-gray-300">
+              Email screenshot of the transaction to: 
+              <a href="mailto:swiftescrow@keemail.me" class="text-primary-color hover:underline">swiftescrow@keemail.me</a>
+              for swift response. Once transaction is confirmed your Monero will be deposited to your wallet.
+              Kindly ensure the swap is only working for Bitcoin to Monero.
+            </p>
+          </div>
+
+          <div class="text-sm text-gray-400 mb-6">
+            <p class="mb-2"><strong>Expected exchange rate:</strong> Market rate at time of confirmation</p>
+            <p><strong>Estimated processing time:</strong> 15-30 minutes after confirmation</p>
+          </div>
+
+          <button id="swap-proceed-btn" class="btn-gradient w-full mb-4">Proceed</button>
+          <a href="javascript:void(0)" id="swap-start-over" class="text-primary-color hover:underline">Start Over</a>
+        </div>
+      </div>
+
+      <!-- Swap Status Page -->
+      <div id="swap-status-page" class="swap-step hidden">
+        <div class="card">
+          <h3 class="text-xl font-semibold mb-4">Swap Transaction Status</h3>
+
+          <div class="flex items-center mb-6">
+            <div class="status-indicator status-pending mr-3"></div>
+            <span class="text-lg" id="swap-status-text">Pending</span>
+          </div>
+
+          <div class="bg-gray-800 p-4 rounded-lg mb-6">
+            <h4 class="font-semibold mb-2">Swap Details</h4>
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-y-2 text-sm text-gray-300">
+              <div>Bitcoin Amount:</div>
+              <div id="status-swap-amount">-</div>
+
+              <div>Monero Address:</div>
+              <div id="status-monero-address">-</div>
+
+              <div>Swap ID:</div>
+              <div>SW-<span id="status-swap-id">25791364</span></div>
+            </div>
+          </div>
+
+          <p class="text-sm text-gray-400 mb-6">
+            Your swap is being processed. Monero will be sent to your wallet after Bitcoin confirmation.
+          </p>
+
+          <a href="javascript:void(0)" id="swap-restart" class="text-primary-color hover:underline">Start Over</a>
+        </div>
+      </div>
+    </section>
+
+    <!-- Contact Us Section -->
+    <section id="contact" class="section py-8">
+      <h2 class="text-3xl font-bold mb-8 text-center">Contact Us</h2>
+
+      <div class="card">
+        <div class="grid grid-cols-1 md:grid-cols-2 gap-8">
+          <div class="flex flex-col items-center justify-center text-center">
+            <div class="text-5xl text-primary-color mb-4">
+              <i class="fab fa-telegram"></i>
+            </div>
+            <h3 class="text-xl font-semibold mb-2">Telegram Bot</h3>
+            <p class="text-gray-300 mb-4">Get instant support through our Telegram bot</p>
+            <a href="https://t.me/Escrowservice101_bot" target="_blank" class="btn-gradient"> @Escrowservice101_bot </a>
+          </div>
+          <div class="flex flex-col items-center justify-center text-center">
+            <div class="text-5xl text-primary-color mb-4">
+              <i class="fas fa-envelope"></i>
+            </div>
+            <h3 class="text-xl font-semibold mb-2">Email Support</h3>
+            <p class="text-gray-300 mb-4">Send us an email for any inquiries</p>
+            <a href="mailto:swiftescrow@keemail.me" class="btn-gradient"> swiftescrow@keemail.me </a>
+          </div>
+        </div>
+        <div class="mt-8 pt-8 border-t border-gray-700">
+          <h3 class="text-xl font-semibold mb-4 text-center">Frequently Asked Questions</h3>
+          <div class="accordion">
+            <div class="mb-3">
+              <div class="accordion-header">
+                <div class="flex justify-between items-center">
+                  <span>How long does the escrow process take?</span>
+                  <i class="fas fa-chevron-down"></i>
+                </div>
+              </div>
+              <div class="accordion-content">
+                <p>The escrow process typically takes 1-24 hours depending on the transaction complexity and verification requirements.</p>
+              </div>
+            </div>
+            <div class="mb-3">
+              <div class="accordion-header">
+                <div class="flex justify-between items-center">
+                  <span>What are the fees for using Swift Escrow?</span>
+                  <i class="fas fa-chevron-down"></i>
+                </div>
+              </div>
+              <div class="accordion-content">
+                <p>Our standard escrow fee is 5% of the transaction amount. Swap services have a fixed fee of 2% per transaction.</p>
+              </div>
+            </div>
+            <div class="mb-3">
+              <div class="accordion-header">
+                <div class="flex justify-between items-center">
+                  <span>Is my personal information secure?</span>
+                  <i class="fas fa-chevron-down"></i>
+                </div>
+              </div>
+              <div class="accordion-content">
+                <p>Absolutely. We employ the highest standards of encryption and security protocols to ensure your personal information remains private and secure.</p>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- Reviews Section -->
+    <section id="reviews" class="section py-8">
+      <h2 class="text-3xl font-bold mb-8 text-center">Customer Reviews</h2>
+      <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6" id="reviews-container">
+        <!-- Review cards will be dynamically inserted here by JavaScript -->
+      </div>
+    </section>
+  </main>
+
+  <footer class="bg-gray-900 text-gray-300 py-8">
+    <div class="container mx-auto px-4">
+      <div class="flex flex-col md:flex-row justify-between items-center">
+        <div class="mb-4 md:mb-0">
+          <h3 class="text-2xl logo">Swift Escrow & Swap</h3>
+        </div>
+        <div class="flex items-center">
+          <a
+            href="https://t.me/Escrowservice101_bot"
+            target="_blank"
+            class="text-2xl mx-2 hover:text-primary-color transition-colors"
+          >
+            <i class="fab fa-telegram"></i>
+          </a>
+        </div>
+      </div>
+      <div class="mt-8 pt-8 border-t border-gray-800 text-center text-sm text-gray-500">
+        <p>© 2025 Swift Escrow & Swap. All rights reserved.</p>
+        <p class="mt-2">
+          <a href="javascript:void(0)" class="hover:text-primary-color">Terms of Service</a> |
+          <a href="javascript:void(0)" class="hover:text-primary-color">Privacy Policy</a>
+        </p>
+      </div>
+    </div>
+  </footer>
+  <script id="app-script">
+    $(document).ready(function () {
+      // Navigation
+      $('.nav-link').on('click', function (e) {
+        e.preventDefault();
+        const section = $(this).data('section');
+
+        // Update URL - replace pushState with direct hash assignment
+        // window.history.pushState({}, '', `#${section}`);
+        window.location.hash = section;
+
+        // Update navigation
+        $('.nav-link').removeClass('active');
+        $(this).addClass('active');
+
+        // Show section
+        $('.section').removeClass('active').hide();
+        $(`#${section}`).addClass('active').show();
+      });
+
+      // Check URL on page load
+      const hash = window.location.hash.substring(1);
+      if (hash) {
+        // Simply trigger the click on the appropriate nav link
+        $(`.nav-link[data-section="${hash}"]`).click();
+      }
+
+      // STATIC ARCHITECTURE NOTE:
+      // This application is fully static with no backend or serverless functions.
+      // All data is persisted client-side using browser's localStorage.
+      // Navigation uses hash-based routing for SPA functionality.
+      // No server calls are made for any application functionality.
+
+      // Accordion functionality
+      $('.accordion-header').on('click', function () {
+        const content = $(this).next('.accordion-content');
+        $('.accordion-content').not(content).removeClass('active');
+        content.toggleClass('active');
+      });
+
+      // Order workflow
+      $('#escrow-form').on('submit', function (e) {
+        e.preventDefault();
+
+        // Save form data to localStorage
+        localStorage.setItem('escrow_role', $('input[name="role"]:checked').val());
+        localStorage.setItem('escrow_counterparty', $('#counterparty-contact').val());
+        localStorage.setItem('escrow_description', $('#transaction-description').val());
+        localStorage.setItem('escrow_amount', $('#transaction-amount').val());
+
+        // Show payment page
+        $('.order-step').removeClass('active').addClass('hidden');
+        $('#order-payment-page').removeClass('hidden').addClass('active');
+      });
+
+      $('#order-proceed-btn').on('click', function () {
+        // Save status to localStorage
+        localStorage.setItem('escrow_status', 'pending');
+        localStorage.setItem(
+          'escrow_id',
+          Math.floor(Math.random() * 90000000) + 10000000
+        );
+
+        // Show status page
+        $('.order-step').removeClass('active').addClass('hidden');
+        $('#order-status-page').removeClass('hidden').addClass('active');
+        
+        // Update status display
+        $('#status-role').text(localStorage.getItem('escrow_role'));
+        $('#status-counterparty').text(localStorage.getItem('escrow_counterparty'));
+        $('#status-amount').text(localStorage.getItem('escrow_amount') + ' BTC');
+        $('#status-description').text(localStorage.getItem('escrow_description'));
+        $('#status-id').text(localStorage.getItem('escrow_id'));
+      });
+      
+      $('#order-start-over').on('click', function() {
+        $('.order-step').removeClass('active').addClass('hidden');
+        $('#order-form-page').removeClass('hidden').addClass('active');
+        $('#escrow-form')[0].reset();
+      });
+
+      // Swap workflow
+      $('#swap-form').on('submit', function (e) {
+        e.preventDefault();
+        
+        // Save form data to localStorage
+        localStorage.setItem('swap_amount', $('#swap-amount').val());
+        localStorage.setItem('swap_monero_address', $('#monero-address').val());
+        
+        // Show deposit page
+        $('.swap-step').removeClass('active').addClass('hidden');
+        $('#swap-deposit-page').removeClass('hidden').addClass('active');
+      });
+      
+      $('#swap-proceed-btn').on('click', function() {
+        // Save status to localStorage
+        localStorage.setItem('swap_status', 'pending');
+        localStorage.setItem(
+          'swap_id',
+          Math.floor(Math.random() * 90000000) + 10000000
+        );
+        
+        // Show status page
+        $('.swap-step').removeClass('active').addClass('hidden');
+        $('#swap-status-page').removeClass('hidden').addClass('active');
+        
+        // Update status display
+        $('#status-swap-amount').text(localStorage.getItem('swap_amount') + ' BTC');
+        $('#status-monero-address').text(localStorage.getItem('swap_monero_address'));
+        $('#status-swap-id').text(localStorage.getItem('swap_id'));
+      });
+      
+      $('#swap-start-over, #swap-restart').on('click', function() {
+        $('.swap-step').removeClass('active').addClass('hidden');
+        $('#swap-form-page').removeClass('hidden').addClass('active');
+        $('#swap-form')[0].reset();
+      });
+
+      // Copy wallet address
+      $('#copy-wallet-btn, #copy-swap-wallet-btn').on('click', function() {
+        const walletAddress = $(this).parent().text().trim();
+        navigator.clipboard.writeText(walletAddress).then(function() {
+          alert('Wallet address copied to clipboard!');
+        });
+      });
+      
+      // Generate reviews
+      function generateReviews() {
+        const reviewsContainer = $('#reviews-container');
+        const reviewTexts = [
+          "Great service, fast and secure. Will use again!",
+          "The escrow service saved me from a potential scam. Highly recommend!",
+          "Best Bitcoin to Monero swap service I've used. Very professional.",
+          "Swift and reliable. The customer support was excellent.",
+          "Smooth transaction process. I was worried at first but everything went perfectly.",
+          "The fees are reasonable considering the security provided.",
+          "Fast processing times and clear instructions. No complaints!",
+          "Used their service for a high-value transaction and everything went well.",
+          "The team was very helpful when I had questions about the process.",
+          "Simple to use and effective. Exactly what I was looking for."
+        ];
+        
+        for (let i = 0; i < 50; i++) {
+          // Generate random rating between 3.1 and 4.8
+          const ratingValue = (Math.random() * (4.8 - 3.1) + 3.1).toFixed(1);
+          const rating = parseFloat(ratingValue);
+          const reviewText = reviewTexts[Math.floor(Math.random() * reviewTexts.length)];
+          const name = `User${Math.floor(Math.random() * 10000)}`;
+          
+          // New date logic to pick a random date between Jan 1st of current year and today
+          const start = new Date(new Date().getFullYear(), 0, 1).getTime();
+          const end = Date.now();
+          const randomDate = new Date(start + Math.random() * (end - start));
+          
+          // Improved stars logic with thresholds
+          const fullStars = Math.floor(rating);
+          const stars = [];
+          
+          // Calculate if we need a half star
+          let halfStar = false;
+          let extraFullStar = false;
+          const fraction = rating - fullStars;
+          
+          if (fraction >= 0.75) {
+            extraFullStar = true;
+          } else if (fraction >= 0.25) {
+            halfStar = true;
+          }
+          
+          // Add full stars
+          for (let j = 0; j < fullStars; j++) {
+            stars.push('<i class="fas fa-star text-secondary-color"></i>');
+          }
+          
+          // Add half star or extra full star if needed
+          if (halfStar) {
+            stars.push('<i class="fas fa-star-half-alt text-secondary-color"></i>');
+          } else if (extraFullStar) {
+            stars.push('<i class="fas fa-star text-secondary-color"></i>');
+          }
+          
+          // Add remaining empty stars
+          const emptyStars = 5 - stars.length;
+          for (let j = 0; j < emptyStars; j++) {
+            stars.push('<i class="far fa-star text-gray-600"></i>');
+          }
+          
+          const reviewCard = $(`
+            <div class="card mb-4">
+              <div class="flex justify-between items-center mb-2">
+                <div class="font-semibold">${name}</div>
+                <div class="text-sm text-gray-400">${randomDate.toLocaleDateString()}</div>
+              </div>
+              <div class="mb-2 review-stars flex items-center">
+                ${stars.join('')}
+              </div>
+              <p class="text-gray-300">${reviewText}</p>
+            </div>
+          `);
+          
+          reviewsContainer.append(reviewCard);
+        }
+      }
+      
+      // Initialize reviews
+      generateReviews();
+    });
+  </script>
+</body>
+</html>
