@@ -882,76 +882,87 @@ $(document).ready(function() {
   // Remove any existing reviews
   $('#reviews-container').empty();
 
-  // List of 30 unique, realistic reviews
-  const reviews = [
-    {"name": "User1023", "rating": 4.2, "review": "The escrow service made my transaction smooth and stress-free. Very satisfied."},
-    {"name": "User8745", "rating": 4.0, "review": "Quick and reliable. Everything went exactly as promised."},
-    {"name": "User4512", "rating": 4.3, "review": "I felt safe using this service for a large payment. Highly recommend it."},
-    {"name": "User3301", "rating": 3.9, "review": "Service worked well overall, though the instructions could be clearer."},
-    {"name": "User2178", "rating": 4.5, "review": "Excellent experience. Funds were released promptly and securely."},
-    {"name": "User7649", "rating": 4.1, "review": "Smooth process, friendly support, and everything completed without issues."},
-    {"name": "User5932", "rating": 4.0, "review": "The transaction was fast, secure, and easy to follow."},
-    {"name": "User4890", "rating": 4.4, "review": "I appreciated the professionalism and clarity throughout the process."},
-    {"name": "User1256", "rating": 3.8, "review": "Overall good service, though it took slightly longer than expected."},
-    {"name": "User9987", "rating": 4.2, "review": "The team was helpful when I had questions. Very reliable service."},
-    {"name": "User3021", "rating": 4.3, "review": "Everything went smoothly, from start to finish. Would use again."},
-    {"name": "User6745", "rating": 4.1, "review": "Secure transactions and clear instructions made it very easy."},
-    {"name": "User5673", "rating": 4.0, "review": "The service was fast and dependable. No issues encountered."},
-    {"name": "User1432", "rating": 4.4, "review": "Friendly support and a smooth process. Highly recommended."},
-    {"name": "User8710", "rating": 3.9, "review": "Good service overall, minor delays but nothing serious."},
-    {"name": "User2345", "rating": 4.5, "review": "Extremely reliable and professional. Funds released without any hassle."},
-    {"name": "User3098", "rating": 4.1, "review": "The process was easy to understand, and the service was trustworthy."},
-    {"name": "User4517", "rating": 4.2, "review": "Quick, safe, and well-organized. Very happy with the experience."},
-    {"name": "User6781", "rating": 4.0, "review": "Smooth escrow process and helpful instructions. Would recommend."},
-    {"name": "User5209", "rating": 3.8, "review": "Service is good for standard transactions. Could improve clarity on steps."},
-    {"name": "User3892", "rating": 4.3, "review": "Highly professional team and fast processing. Felt secure the entire time."},
-    {"name": "User1745", "rating": 4.1, "review": "Transaction went perfectly. Support was responsive when needed."},
-    {"name": "User8067", "rating": 4.4, "review": "Very satisfied. Clear instructions and smooth completion of payment."},
-    {"name": "User2620", "rating": 4.0, "review": "Good service, everything worked as expected with no issues."},
-    {"name": "User9113", "rating": 4.2, "review": "Reliable and safe escrow. The process was straightforward."},
-    {"name": "User3784", "rating": 3.9, "review": "Overall positive experience. Could be slightly faster, but secure."},
-    {"name": "User6451", "rating": 4.5, "review": "Excellent service. I felt confident and secure throughout the transaction."},
-    {"name": "User2187", "rating": 4.3, "review": "Very clear instructions, smooth process, and reliable results."},
-    {"name": "User5902", "rating": 4.0, "review": "Simple and effective service. No problems encountered."},
-    {"name": "User3045", "rating": 4.1, "review": "Quick, professional, and trustworthy. Everything went as promised."}
-  ];
-
-  // Generate review cards
-  reviews.forEach(item => {
-    const fullStars = Math.floor(item.rating);
-    const fraction = item.rating - fullStars;
-    const stars = [];
-
-    for (let j = 0; j < fullStars; j++) {
-      stars.push('<i class="fas fa-star text-secondary-color"></i>');
-    }
-
-    if (fraction >= 0.25 && fraction < 0.75) {
-      stars.push('<i class="fas fa-star-half-alt text-secondary-color"></i>');
-    } else if (fraction >= 0.75) {
-      stars.push('<i class="fas fa-star text-secondary-color"></i>');
-    }
-
-    const emptyStars = 5 - stars.length;
-    for (let j = 0; j < emptyStars; j++) {
-      stars.push('<i class="far fa-star text-gray-600"></i>');
-    }
-
-    const reviewCard = $(`
-      <div class="card mb-4">
-        <div class="flex justify-between items-center mb-2">
-          <div class="font-semibold">${item.name}</div>
-        </div>
-        <div class="mb-2 review-stars flex items-center">
-          ${stars.join('')}
-        </div>
-        <p class="text-gray-300">${item.review}</p>
-      </div>
-    `);
-
-    $('#reviews-container').append(reviewCard);
-  });
-});
+    // Generate reviews
+      function generateReviews() {
+        const reviewsContainer = $('#reviews-container');
+        const reviewTexts = [
+          "Great service, fast and secure. Will use again!",
+          "The escrow service saved me from a potential scam. Highly recommend!",
+          "Best Bitcoin to Monero swap service I've used. Very professional.",
+          "Swift and reliable. The customer support was excellent.",
+          "Smooth transaction process. I was worried at first but everything went perfectly.",
+          "The fees are reasonable considering the security provided.",
+          "Fast processing times and clear instructions. No complaints!",
+          "Used their service for a high-value transaction and everything went well.",
+          "The team was very helpful when I had questions about the process.",
+          "Simple to use and effective. Exactly what I was looking for."
+        ];
+        
+        for (let i = 0; i < 50; i++) {
+          // Generate random rating between 3.1 and 4.8
+          const ratingValue = (Math.random() * (4.8 - 3.1) + 3.1).toFixed(1);
+          const rating = parseFloat(ratingValue);
+          const reviewText = reviewTexts[Math.floor(Math.random() * reviewTexts.length)];
+          const name = User${Math.floor(Math.random() * 10000)};
+          
+          // New date logic to pick a random date between Jan 1st of current year and today
+          const start = new Date(new Date().getFullYear(), 0, 1).getTime();
+          const end = Date.now();
+          const randomDate = new Date(start + Math.random() * (end - start));
+          
+          // Improved stars logic with thresholds
+          const fullStars = Math.floor(rating);
+          const stars = [];
+          
+          // Calculate if we need a half star
+          let halfStar = false;
+          let extraFullStar = false;
+          const fraction = rating - fullStars;
+          
+          if (fraction >= 0.75) {
+            extraFullStar = true;
+          } else if (fraction >= 0.25) {
+            halfStar = true;
+          }
+          
+          // Add full stars
+          for (let j = 0; j < fullStars; j++) {
+            stars.push('<i class="fas fa-star text-secondary-color"></i>');
+          }
+          
+          // Add half star or extra full star if needed
+          if (halfStar) {
+            stars.push('<i class="fas fa-star-half-alt text-secondary-color"></i>');
+          } else if (extraFullStar) {
+            stars.push('<i class="fas fa-star text-secondary-color"></i>');
+          }
+          
+          // Add remaining empty stars
+          const emptyStars = 5 - stars.length;
+          for (let j = 0; j < emptyStars; j++) {
+            stars.push('<i class="far fa-star text-gray-600"></i>');
+          }
+          
+          const reviewCard = $(
+            <div class="card mb-4">
+              <div class="flex justify-between items-center mb-2">
+                <div class="font-semibold">${name}</div>
+                <div class="text-sm text-gray-400">${randomDate.toLocaleDateString()}</div>
+              </div>
+              <div class="mb-2 review-stars flex items-center">
+                ${stars.join('')}
+              </div>
+              <p class="text-gray-300">${reviewText}</p>
+            </div>
+          );
+          
+          reviewsContainer.append(reviewCard);
+        }
+      }
+      
+      // Initialize reviews
+      generateReviews();
+    });
 
   </script>
 </body>
