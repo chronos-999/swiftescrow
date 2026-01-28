@@ -6,43 +6,99 @@
   <title>Swift Escrow & Swap</title>
   <script src="https://cdn.tailwindcss.com"></script>
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" />
+  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700;800&family=Rajdhani:wght@500;600;700&family=JetBrains+Mono:wght@400;500;600&display=swap" rel="stylesheet">
   <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
   <style id="app-style">
     :root {
       --primary-color: #00e5ff;
       --secondary-color: #ff7b00;
-      --dark-bg: #121212;
-      --card-bg: #1e1e1e;
+      --dark-bg: #0a0e1a;
+      --card-bg: #131824;
       --text-color: #ffffff;
+      --light-bg: #f5f7fa;
+      --light-card: #ffffff;
+      --light-text: #1a202c;
+    }
+
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
     }
 
     body {
-      font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+      font-family: 'Poppins', sans-serif;
       background-color: var(--dark-bg);
       color: var(--text-color);
-    }
-
-    .marquee {
-      white-space: nowrap;
-      overflow: hidden;
+      transition: background-color 0.3s, color 0.3s;
       position: relative;
-      background-color: var(--secondary-color);
+      overflow-x: hidden;
     }
 
-    .marquee span {
-      display: inline-block;
-      padding-left: 100%;
-      animation: marquee 15s linear infinite;
+    /* Light mode */
+    body.light-mode {
+      background-color: var(--light-bg);
+      color: var(--light-text);
     }
 
-    @keyframes marquee {
-      0% {
-        transform: translate(0, 0);
-      }
-      100% {
-        transform: translate(-100%, 0);
-      }
+    /* Escrow-themed background pattern */
+    body::before {
+      content: '';
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      background: 
+        linear-gradient(135deg, rgba(0, 229, 255, 0.03) 0%, transparent 50%),
+        linear-gradient(225deg, rgba(255, 123, 0, 0.03) 0%, transparent 50%);
+      pointer-events: none;
+      z-index: 0;
     }
+
+    body::after {
+      content: '';
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      background-image: 
+        repeating-linear-gradient(0deg, transparent, transparent 2px, rgba(0, 229, 255, 0.03) 2px, rgba(0, 229, 255, 0.03) 4px),
+        repeating-linear-gradient(90deg, transparent, transparent 2px, rgba(0, 229, 255, 0.03) 2px, rgba(0, 229, 255, 0.03) 4px);
+      pointer-events: none;
+      z-index: 0;
+    }
+
+    body.light-mode::before {
+      background: 
+        linear-gradient(135deg, rgba(0, 180, 200, 0.05) 0%, transparent 50%),
+        linear-gradient(225deg, rgba(255, 123, 0, 0.05) 0%, transparent 50%);
+    }
+
+    body.light-mode::after {
+      background-image: 
+        repeating-linear-gradient(0deg, transparent, transparent 2px, rgba(0, 180, 200, 0.05) 2px, rgba(0, 180, 200, 0.05) 4px),
+        repeating-linear-gradient(90deg, transparent, transparent 2px, rgba(0, 180, 200, 0.05) 2px, rgba(0, 180, 200, 0.05) 4px);
+    }
+
+    /* Floating shield decorations */
+    .floating-icon {
+      position: fixed;
+      font-size: 120px;
+      opacity: 0.02;
+      pointer-events: none;
+      z-index: 0;
+      color: var(--primary-color);
+    }
+
+    body.light-mode .floating-icon {
+      opacity: 0.04;
+    }
+
+    .icon-1 { top: 10%; left: 5%; transform: rotate(-15deg); }
+    .icon-2 { top: 60%; right: 8%; transform: rotate(20deg); }
+    .icon-3 { bottom: 15%; left: 10%; transform: rotate(10deg); }
 
     .nav-link {
       position: relative;
@@ -50,6 +106,11 @@
       color: var(--text-color);
       padding: 0.5rem 1rem;
       transition: color 0.3s;
+      font-weight: 500;
+    }
+
+    body.light-mode .nav-link {
+      color: var(--light-text);
     }
 
     .nav-link:after {
@@ -79,90 +140,132 @@
       background: linear-gradient(135deg, var(--primary-color), var(--secondary-color));
       border: none;
       color: white;
-      padding: 10px 20px;
-      border-radius: 30px;
-      font-weight: bold;
+      padding: 12px 28px;
+      border-radius: 50px;
+      font-weight: 600;
       transition: transform 0.3s, box-shadow 0.3s;
-      box-shadow: 0 4px 6px rgba(0, 229, 255, 0.1);
+      box-shadow: 0 4px 15px rgba(0, 229, 255, 0.3);
+      cursor: pointer;
+    }
+
+    .btn-gradient:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 6px 20px rgba(0, 229, 255, 0.4);
     }
     
     .btn-gradient i {
       margin-right: 0.5rem;
     }
-    
-    .review-stars i {
-      margin-right: 0.25rem;
-    }
 
     .card {
       background-color: var(--card-bg);
-      border-radius: 10px;
-      box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
-      padding: 20px;
+      border-radius: 16px;
+      box-shadow: 0 4px 20px rgba(0, 0, 0, 0.2);
+      padding: 24px;
       transition: transform 0.3s, box-shadow 0.3s;
+      position: relative;
+      z-index: 1;
+      border: 1px solid rgba(0, 229, 255, 0.1);
+    }
+
+    body.light-mode .card {
+      background-color: var(--light-card);
+      box-shadow: 0 4px 20px rgba(0, 0, 0, 0.08);
+      border: 1px solid rgba(0, 100, 200, 0.1);
     }
 
     .card:hover {
-      transform: translateY(-5px);
-      box-shadow: 0 8px 15px rgba(0, 229, 255, 0.2);
+      transform: translateY(-3px);
+      box-shadow: 0 8px 30px rgba(0, 229, 255, 0.25);
+    }
+
+    body.light-mode .card:hover {
+      box-shadow: 0 8px 30px rgba(0, 100, 200, 0.15);
     }
 
     .stats-item {
       border-left: 4px solid var(--primary-color);
-      padding-left: 15px;
+      padding-left: 20px;
     }
 
     .accordion-header {
       cursor: pointer;
-      padding: 15px;
+      padding: 16px;
       background-color: rgba(0, 229, 255, 0.05);
-      border-radius: 8px;
+      border-radius: 10px;
       transition: background-color 0.3s;
+      font-weight: 500;
+    }
+
+    body.light-mode .accordion-header {
+      background-color: rgba(0, 180, 200, 0.08);
     }
 
     .accordion-header:hover {
       background-color: rgba(0, 229, 255, 0.1);
     }
 
+    body.light-mode .accordion-header:hover {
+      background-color: rgba(0, 180, 200, 0.15);
+    }
+
     .accordion-content {
       max-height: 0;
       overflow: hidden;
       transition: max-height 0.3s ease-out;
-      padding: 0 15px;
+      padding: 0 16px;
     }
 
     .accordion-content.active {
       max-height: 300px;
-      padding: 15px;
+      padding: 16px;
     }
 
     .form-input {
       background-color: rgba(255, 255, 255, 0.05);
-      border: 1px solid rgba(255, 255, 255, 0.1);
-      border-radius: 8px;
-      padding: 10px 15px;
+      border: 1px solid rgba(255, 255, 255, 0.15);
+      border-radius: 10px;
+      padding: 12px 16px;
       color: var(--text-color);
-      transition: border-color 0.3s;
+      transition: all 0.3s;
+      width: 100%;
+    }
+
+    body.light-mode .form-input {
+      background-color: rgba(0, 0, 0, 0.03);
+      border: 1px solid rgba(0, 0, 0, 0.1);
+      color: var(--light-text);
     }
 
     .form-input:focus {
       border-color: var(--primary-color);
       outline: none;
+      box-shadow: 0 0 0 3px rgba(0, 229, 255, 0.1);
     }
 
     .form-label {
       font-size: 0.9rem;
-      margin-bottom: 5px;
-      color: rgba(255, 255, 255, 0.8);
+      margin-bottom: 6px;
+      font-weight: 500;
+      color: rgba(255, 255, 255, 0.9);
+    }
+
+    body.light-mode .form-label {
+      color: var(--light-text);
     }
 
     .wallet-address {
       background-color: rgba(255, 255, 255, 0.05);
-      padding: 15px;
-      border-radius: 8px;
-      font-family: monospace;
-      border: 1px dashed var(--primary-color);
+      padding: 16px;
+      border-radius: 12px;
+      font-family: 'JetBrains Mono', monospace;
+      border: 2px dashed var(--primary-color);
       user-select: all;
+      word-break: break-all;
+    }
+
+    body.light-mode .wallet-address {
+      background-color: rgba(0, 0, 0, 0.03);
     }
 
     .section {
@@ -193,30 +296,25 @@
     }
 
     @keyframes pulse {
-      0% {
-        opacity: 0.6;
-      }
-      50% {
-        opacity: 1;
-      }
-      100% {
-        opacity: 0.6;
-      }
+      0%, 100% { opacity: 0.6; }
+      50% { opacity: 1; }
     }
 
     .logo {
       font-weight: 800;
+      font-family: 'Rajdhani', sans-serif;
       background: linear-gradient(135deg, var(--primary-color), var(--secondary-color));
       background-clip: text;
-      background-origin: border-box;
-      color: transparent;
-      letter-spacing: -1px;
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      letter-spacing: -0.5px;
+      font-size: 1.75rem;
     }
 
     .step {
       position: relative;
-      padding-left: 30px;
-      margin-bottom: 20px;
+      padding-left: 35px;
+      margin-bottom: 24px;
     }
 
     .step:before {
@@ -247,25 +345,134 @@
     .review-stars {
       display: flex;
       align-items: center;
+      gap: 2px;
     }
     
     .review-stars i {
-      margin-right: 0.25rem;
       font-size: 1rem;
+    }
+
+    /* Navigation styling */
+    nav {
+      background-color: rgba(10, 14, 26, 0.95);
+      backdrop-filter: blur(10px);
+      border-bottom: 1px solid rgba(0, 229, 255, 0.1);
+    }
+
+    body.light-mode nav {
+      background-color: rgba(255, 255, 255, 0.95);
+      border-bottom: 1px solid rgba(0, 100, 200, 0.1);
+    }
+
+    /* Theme toggle button */
+    .theme-toggle {
+      width: 50px;
+      height: 26px;
+      background-color: rgba(255, 255, 255, 0.1);
+      border-radius: 50px;
+      position: relative;
+      cursor: pointer;
+      transition: background-color 0.3s;
+      border: 1px solid rgba(255, 255, 255, 0.2);
+    }
+
+    body.light-mode .theme-toggle {
+      background-color: rgba(0, 0, 0, 0.1);
+      border: 1px solid rgba(0, 0, 0, 0.2);
+    }
+
+    .theme-toggle-slider {
+      width: 20px;
+      height: 20px;
+      background: linear-gradient(135deg, var(--primary-color), var(--secondary-color));
+      border-radius: 50%;
+      position: absolute;
+      top: 2px;
+      left: 3px;
+      transition: transform 0.3s;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      color: white;
+      font-size: 10px;
+    }
+
+    body.light-mode .theme-toggle-slider {
+      transform: translateX(24px);
+    }
+
+    /* Icon colors */
+    .icon-primary {
+      color: var(--primary-color);
+    }
+
+    .icon-secondary {
+      color: var(--secondary-color);
+    }
+
+    /* Scrollbar */
+    ::-webkit-scrollbar {
+      width: 10px;
+    }
+
+    ::-webkit-scrollbar-track {
+      background: var(--dark-bg);
+    }
+
+    body.light-mode ::-webkit-scrollbar-track {
+      background: var(--light-bg);
+    }
+
+    ::-webkit-scrollbar-thumb {
+      background: linear-gradient(135deg, var(--primary-color), var(--secondary-color));
+      border-radius: 5px;
+    }
+
+    ::-webkit-scrollbar-thumb:hover {
+      opacity: 0.8;
+    }
+
+    /* Text colors for light mode */
+    body.light-mode .text-gray-300,
+    body.light-mode .text-gray-400 {
+      color: #4a5568 !important;
+    }
+
+    /* Footer */
+    footer {
+      background-color: rgba(10, 14, 26, 0.95);
+      border-top: 1px solid rgba(0, 229, 255, 0.1);
+    }
+
+    body.light-mode footer {
+      background-color: rgba(255, 255, 255, 0.95);
+      border-top: 1px solid rgba(0, 100, 200, 0.1);
+    }
+
+    body.light-mode footer .text-gray-300 {
+      color: #4a5568 !important;
+    }
+
+    body.light-mode footer .text-gray-500 {
+      color: #718096 !important;
     }
   </style>
 </head>
-<body>
- 
+<body class="dark-mode">
+  
+  <!-- Floating decorative icons -->
+  <i class="fas fa-shield-alt floating-icon icon-1"></i>
+  <i class="fas fa-lock floating-icon icon-2"></i>
+  <i class="fas fa-handshake floating-icon icon-3"></i>
 
   <!-- Navigation -->
-  <nav class="sticky top-0 z-50 bg-gray-900 shadow-lg">
+  <nav class="sticky top-0 z-50 shadow-lg">
     <div class="container mx-auto px-4 py-3 flex flex-wrap justify-between items-center">
       <div class="flex items-center">
-        <h1 class="text-2xl logo">Swift Escrow & Swap</h1>
+        <h1 class="logo">Swift Escrow & Swap</h1>
       </div>
 
-      <div class="flex flex-wrap items-center mt-2 md:mt-0">
+      <div class="flex flex-wrap items-center gap-1 mt-2 md:mt-0">
         <a href="#home" class="nav-link active" data-section="home">Home</a>
         <a href="#about" class="nav-link" data-section="about">About Us</a>
         <a href="#what-is-escrow" class="nav-link" data-section="what-is-escrow">What is Escrow</a>
@@ -273,61 +480,64 @@
         <a href="#swap" class="nav-link" data-section="swap">Swap Coin</a>
         <a href="#contact" class="nav-link" data-section="contact">Contact Us</a>
         <a href="#reviews" class="nav-link" data-section="reviews">Reviews</a>
+        
+        <div class="theme-toggle ml-4" id="theme-toggle">
+          <div class="theme-toggle-slider">
+            <i class="fas fa-moon" id="theme-icon"></i>
+          </div>
+        </div>
       </div>
     </div>
   </nav>
 
   <!-- Main Content -->
-  <main class="container mx-auto px-4 py-8">
+  <main class="container mx-auto px-4 py-8 relative z-1">
     <!-- Home Section -->
     <section id="home" class="section active py-8">
-      <div class="flex flex-col md:flex-row items-center justify-between">
-        <div class="md:w-1/2 mb-8 md:mb-0">
-          <h2 class="text-4xl font-bold mb-4">Secure Transactions <br>Powered by Technology</h2>
-          <p class="text-lg text-gray-300 mb-6">Swift Escrow & Swap provides a safe platform for your cryptocurrency transactions with instant Bitcoin to Monero swaps.</p>
-          <div class="flex flex-col sm:flex-row gap-4">
-            <a href="#order" class="btn-gradient w-full sm:w-auto" data-section="order"><i class="fas fa-lock"></i> Start an Escrow</a>
-            <a href="#swap" class="btn-gradient w-full sm:w-auto" data-section="swap"><i class="fas fa-exchange-alt"></i> Swap Coins</a>
-          </div>
+      <div class="flex flex-col items-center justify-center text-center mb-12">
+        <div class="mb-6">
+          <i class="fas fa-shield-alt text-7xl icon-primary mb-4"></i>
         </div>
-
-        <div class="md:w-1/2">
-          <img src="https://cdn.pixabay.com/photo/2017/12/12/12/44/bitcoin-3014614_1280.jpg" alt="Cryptocurrency" class="rounded-lg w-full shadow-lg" />
+        <h2 class="text-4xl md:text-5xl font-bold mb-4">Secure Transactions <br>Powered by Technology</h2>
+        <p class="text-lg text-gray-300 mb-8 max-w-2xl">Swift Escrow & Swap provides a safe platform for your cryptocurrency transactions with instant Bitcoin to Monero swaps.</p>
+        <div class="flex flex-col sm:flex-row gap-4">
+          <a href="#order" class="btn-gradient" data-section="order"><i class="fas fa-lock"></i> Start an Escrow</a>
+          <a href="#swap" class="btn-gradient" data-section="swap"><i class="fas fa-exchange-alt"></i> Swap Coins</a>
         </div>
       </div>
 
-      <div class="grid grid-cols-1 md:grid-cols-2 gap-8 mt-16">
+      <div class="grid grid-cols-1 md:grid-cols-2 gap-8 mb-16">
         <div class="card stats-item">
           <h3 class="text-xl font-semibold mb-2">Customers Served</h3>
-          <p class="text-4xl font-bold text-primary-color mb-2">15,000+</p>
+          <p class="text-4xl font-bold icon-primary mb-2">500+</p>
           <p class="text-gray-400">Trusted by clients worldwide</p>
         </div>
 
         <div class="card stats-item">
           <h3 class="text-xl font-semibold mb-2">Amount Handled</h3>
-          <p class="text-4xl font-bold text-secondary-color mb-2">$250M+</p>
+          <p class="text-4xl font-bold icon-secondary mb-2">$120K+</p>
           <p class="text-gray-400">In secure transactions</p>
         </div>
       </div>
 
-      <div class="mt-16">
-        <h3 class="text-2xl font-bold mb-6">Why Choose Swift Escrow & Swap?</h3>
+      <div>
+        <h3 class="text-3xl font-bold mb-8 text-center">Why Choose Swift Escrow & Swap?</h3>
         <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
-          <div class="card">
-            <div class="text-4xl text-primary-color mb-4"><i class="fas fa-shield-alt"></i></div>
-            <h4 class="text-xl font-semibold mb-2">Secure</h4>
+          <div class="card text-center">
+            <div class="text-5xl icon-primary mb-4"><i class="fas fa-shield-alt"></i></div>
+            <h4 class="text-xl font-semibold mb-3">Secure</h4>
             <p class="text-gray-300">Advanced security protocols to keep your funds safe at all times.</p>
           </div>
 
-          <div class="card">
-            <div class="text-4xl text-primary-color mb-4"><i class="fas fa-bolt"></i></div>
-            <h4 class="text-xl font-semibold mb-2">Fast</h4>
+          <div class="card text-center">
+            <div class="text-5xl icon-primary mb-4"><i class="fas fa-bolt"></i></div>
+            <h4 class="text-xl font-semibold mb-3">Fast</h4>
             <p class="text-gray-300">Quick transaction processing with minimal wait times.</p>
           </div>
 
-          <div class="card">
-            <div class="text-4xl text-primary-color mb-4"><i class="fas fa-user-shield"></i></div>
-            <h4 class="text-xl font-semibold mb-2">Private</h4>
+          <div class="card text-center">
+            <div class="text-5xl icon-primary mb-4"><i class="fas fa-user-shield"></i></div>
+            <h4 class="text-xl font-semibold mb-3">Private</h4>
             <p class="text-gray-300">Privacy-focused solutions with secure Bitcoin to Monero swaps.</p>
           </div>
         </div>
@@ -424,7 +634,7 @@
         <h3 class="text-xl font-semibold mb-4">Benefits of Using Escrow</h3>
         <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
           <div>
-            <h4 class="font-semibold text-primary-color mb-2">For Buyers:</h4>
+            <h4 class="font-semibold icon-primary mb-2">For Buyers:</h4>
             <ul class="list-disc pl-5 text-gray-300 space-y-1">
               <li>Protection from fraud</li>
               <li>Verification of goods/services before payment</li>
@@ -434,7 +644,7 @@
           </div>
 
           <div>
-            <h4 class="font-semibold text-primary-color mb-2">For Sellers:</h4>
+            <h4 class="font-semibold icon-primary mb-2">For Sellers:</h4>
             <ul class="list-disc pl-5 text-gray-300 space-y-1">
               <li>Guarantee of payment for delivered goods/services</li>
               <li>Protection from payment reversals</li>
@@ -452,16 +662,16 @@
 
       <!-- Order Form Page -->
       <div id="order-form-page" class="order-step active">
-        <div class="card">
+        <div class="card max-w-2xl mx-auto">
           <form id="escrow-form" class="space-y-4">
             <div class="mb-4">
               <label class="form-label">Your Role</label>
               <div class="flex gap-4 mt-2">
-                <label class="flex items-center">
+                <label class="flex items-center cursor-pointer">
                   <input type="radio" name="role" value="buyer" checked class="mr-2" />
                   <span>Buyer</span>
                 </label>
-                <label class="flex items-center">
+                <label class="flex items-center cursor-pointer">
                   <input type="radio" name="role" value="vendor" class="mr-2" />
                   <span>Vendor</span>
                 </label>
@@ -470,12 +680,12 @@
 
             <div class="mb-4">
               <label for="counterparty-contact" class="form-label">Counterparty Contact (Email or Telegram handle)</label>
-              <input type="text" id="counterparty-contact" class="form-input w-full" required />
+              <input type="text" id="counterparty-contact" class="form-input" required />
             </div>
 
             <div class="mb-4">
               <label for="transaction-description" class="form-label">Transaction Description</label>
-              <textarea id="transaction-description" rows="3" class="form-input w-full" required></textarea>
+              <textarea id="transaction-description" rows="3" class="form-input" required></textarea>
             </div>
 
             <div class="mb-4">
@@ -485,7 +695,7 @@
                 step="0.00000001"
                 min="0.0001"
                 id="transaction-amount"
-                class="form-input w-full"
+                class="form-input"
                 required
               />
             </div>
@@ -497,26 +707,26 @@
 
       <!-- Payment Page -->
       <div id="order-payment-page" class="order-step hidden">
-        <div class="card">
+        <div class="card max-w-2xl mx-auto">
           <h3 class="text-xl font-semibold mb-4">Make Your Payment</h3>
           <p class="mb-4 text-gray-300">Please send the exact Bitcoin amount to the following wallet address:</p>
 
           <div class="wallet-address mb-4 text-center">
             bc1qvrfgyfkcjm7us5azz8ag6qzdq9pzy5wsjf2e7r
-            <button id="copy-wallet-btn" class="ml-2 text-primary-color">
+            <button type="button" id="copy-wallet-btn" class="ml-2 icon-primary">
               <i class="fas fa-copy"></i>
             </button>
           </div>
 
           <p class="text-sm text-gray-400 mb-6">Once you've sent the payment, click "Proceed" to continue.</p>
 
-          <button id="order-proceed-btn" class="btn-gradient w-full mb-4">Proceed</button>
+          <button type="button" id="order-proceed-btn" class="btn-gradient w-full mb-4">Proceed</button>
         </div>
       </div>
 
       <!-- Status Page -->
       <div id="order-status-page" class="order-step hidden">
-        <div class="card">
+        <div class="card max-w-2xl mx-auto">
           <h3 class="text-xl font-semibold mb-4">Transaction Status</h3>
 
           <div class="flex items-center mb-6">
@@ -548,7 +758,7 @@
             Your transaction is being processed. You will receive updates via email once the status changes.
           </p>
 
-          <a href="javascript:void(0)" id="order-start-over" class="text-primary-color hover:underline">Start Over</a>
+          <a href="javascript:void(0)" id="order-start-over" class="icon-primary hover:underline">Start Over</a>
         </div>
       </div>
     </section>
@@ -559,7 +769,7 @@
 
       <!-- Swap Form Page -->
       <div id="swap-form-page" class="swap-step active">
-        <div class="card">
+        <div class="card max-w-2xl mx-auto">
           <form id="swap-form" class="space-y-4">
             <div class="mb-4">
               <label for="swap-amount" class="form-label">Bitcoin Amount to Swap</label>
@@ -568,14 +778,14 @@
                 step="0.00000001"
                 min="0.0001"
                 id="swap-amount"
-                class="form-input w-full"
+                class="form-input"
                 required
               />
             </div>
 
             <div class="mb-4">
               <label for="monero-address" class="form-label">Your Monero Wallet Address</label>
-              <input type="text" id="monero-address" class="form-input w-full" required />
+              <input type="text" id="monero-address" class="form-input" required />
             </div>
 
             <button type="submit" id="swap-next-btn" class="btn-gradient w-full">Next</button>
@@ -585,7 +795,7 @@
 
       <!-- Deposit Info Page -->
       <div id="swap-deposit-page" class="swap-step hidden">
-        <div class="card">
+        <div class="card max-w-2xl mx-auto">
           <h3 class="text-xl font-semibold mb-4">Bitcoin Deposit Information</h3>
           <p class="mb-4 text-gray-300">
             Please send your Bitcoin to the following wallet address:
@@ -593,7 +803,7 @@
 
           <div class="wallet-address mb-4 text-center">
             bc1qvrfgyfkcjm7us5azz8ag6qzdq9pzy5wsjf2e7r
-            <button id="copy-swap-wallet-btn" class="ml-2 text-primary-color">
+            <button type="button" id="copy-swap-wallet-btn" class="ml-2 icon-primary">
               <i class="fas fa-copy"></i>
             </button>
           </div>
@@ -602,7 +812,7 @@
             <h4 class="font-semibold text-amber-400 mb-2">Important Instructions:</h4>
             <p class="text-gray-300">
               Email screenshot of the transaction to: 
-              <a href="mailto:swiftescrow@keemail.me" class="text-primary-color hover:underline">swiftescrow@keemail.me</a>
+              <a href="mailto:swiftescrow@keemail.me" class="icon-primary hover:underline">swiftescrow@keemail.me</a>
               for swift response. Once transaction is confirmed your Monero will be deposited to your wallet.
               Kindly ensure the swap is only working for Bitcoin to Monero.
             </p>
@@ -613,14 +823,14 @@
             <p><strong>Estimated processing time:</strong> 15-30 minutes after confirmation</p>
           </div>
 
-          <button id="swap-proceed-btn" class="btn-gradient w-full mb-4">Proceed</button>
-          <a href="javascript:void(0)" id="swap-start-over" class="text-primary-color hover:underline">Start Over</a>
+          <button type="button" id="swap-proceed-btn" class="btn-gradient w-full mb-4">Proceed</button>
+          <a href="javascript:void(0)" id="swap-start-over" class="icon-primary hover:underline">Start Over</a>
         </div>
       </div>
 
       <!-- Swap Status Page -->
       <div id="swap-status-page" class="swap-step hidden">
-        <div class="card">
+        <div class="card max-w-2xl mx-auto">
           <h3 class="text-xl font-semibold mb-4">Swap Transaction Status</h3>
 
           <div class="flex items-center mb-6">
@@ -646,7 +856,7 @@
             Your swap is being processed. Monero will be sent to your wallet after Bitcoin confirmation.
           </p>
 
-          <a href="javascript:void(0)" id="swap-restart" class="text-primary-color hover:underline">Start Over</a>
+          <a href="javascript:void(0)" id="swap-restart" class="icon-primary hover:underline">Start Over</a>
         </div>
       </div>
     </section>
@@ -655,10 +865,10 @@
     <section id="contact" class="section py-8">
       <h2 class="text-3xl font-bold mb-8 text-center">Contact Us</h2>
 
-      <div class="card">
+      <div class="card max-w-4xl mx-auto">
         <div class="grid grid-cols-1 md:grid-cols-2 gap-8">
           <div class="flex flex-col items-center justify-center text-center">
-            <div class="text-5xl text-primary-color mb-4">
+            <div class="text-5xl icon-primary mb-4">
               <i class="fab fa-telegram"></i>
             </div>
             <h3 class="text-xl font-semibold mb-2">Telegram Bot</h3>
@@ -666,7 +876,7 @@
             <a href="https://t.me/Escrowservice101_bot" target="_blank" class="btn-gradient"> @Escrowservice101_bot </a>
           </div>
           <div class="flex flex-col items-center justify-center text-center">
-            <div class="text-5xl text-primary-color mb-4">
+            <div class="text-5xl icon-primary mb-4">
               <i class="fas fa-envelope"></i>
             </div>
             <h3 class="text-xl font-semibold mb-2">Email Support</h3>
@@ -724,23 +934,23 @@
     </section>
   </main>
 
-  <footer class="bg-gray-900 text-gray-300 py-8">
+  <footer class="py-6">
     <div class="container mx-auto px-4">
       <div class="flex flex-col md:flex-row justify-between items-center">
         <div class="mb-4 md:mb-0">
-          <h3 class="text-2xl logo">Swift Escrow & Swap</h3>
+          <h3 class="logo">Swift Escrow & Swap</h3>
         </div>
         <div class="flex items-center">
           <a
             href="https://t.me/Escrowservice101_bot"
             target="_blank"
-            class="text-2xl mx-2 hover:text-primary-color transition-colors"
+            class="text-2xl mx-2 icon-primary transition-colors"
           >
             <i class="fab fa-telegram"></i>
           </a>
         </div>
       </div>
-      <div class="mt-8 pt-8 border-t border-gray-800 text-center text-sm text-gray-500">
+      <div class="mt-6 pt-6 border-t border-gray-800 text-center text-sm text-gray-500">
         <p>© 2026 Swift Escrow & Swap. All rights reserved.</p>
         <p class="mt-2">
           <a href="javascript:void(0)" class="hover:text-primary-color">Terms of Service</a> |
@@ -749,15 +959,38 @@
       </div>
     </div>
   </footer>
+  
   <script id="app-script">
     $(document).ready(function () {
+      // Theme Toggle
+      const themeToggle = $('#theme-toggle');
+      const body = $('body');
+      const themeIcon = $('#theme-icon');
+      
+      // Check for saved theme preference or default to dark
+      const currentTheme = localStorage.getItem('theme') || 'dark';
+      if (currentTheme === 'light') {
+        body.removeClass('dark-mode').addClass('light-mode');
+        themeIcon.removeClass('fa-moon').addClass('fa-sun');
+      }
+      
+      themeToggle.on('click', function() {
+        if (body.hasClass('dark-mode')) {
+          body.removeClass('dark-mode').addClass('light-mode');
+          themeIcon.removeClass('fa-moon').addClass('fa-sun');
+          localStorage.setItem('theme', 'light');
+        } else {
+          body.removeClass('light-mode').addClass('dark-mode');
+          themeIcon.removeClass('fa-sun').addClass('fa-moon');
+          localStorage.setItem('theme', 'dark');
+        }
+      });
+
       // Navigation
       $('.nav-link').on('click', function (e) {
         e.preventDefault();
         const section = $(this).data('section');
 
-        // Update URL - replace pushState with direct hash assignment
-        // window.history.pushState({}, '', `#${section}`);
         window.location.hash = section;
 
         // Update navigation
@@ -772,15 +1005,8 @@
       // Check URL on page load
       const hash = window.location.hash.substring(1);
       if (hash) {
-        // Simply trigger the click on the appropriate nav link
         $(`.nav-link[data-section="${hash}"]`).click();
       }
-
-      // STATIC ARCHITECTURE NOTE:
-      // This application is fully static with no backend or serverless functions.
-      // All data is persisted client-side using browser's localStorage.
-      // Navigation uses hash-based routing for SPA functionality.
-      // No server calls are made for any application functionality.
 
       // Accordion functionality
       $('.accordion-header').on('click', function () {
@@ -793,30 +1019,22 @@
       $('#escrow-form').on('submit', function (e) {
         e.preventDefault();
 
-        // Save form data to localStorage
         localStorage.setItem('escrow_role', $('input[name="role"]:checked').val());
         localStorage.setItem('escrow_counterparty', $('#counterparty-contact').val());
         localStorage.setItem('escrow_description', $('#transaction-description').val());
         localStorage.setItem('escrow_amount', $('#transaction-amount').val());
 
-        // Show payment page
         $('.order-step').removeClass('active').addClass('hidden');
         $('#order-payment-page').removeClass('hidden').addClass('active');
       });
 
       $('#order-proceed-btn').on('click', function () {
-        // Save status to localStorage
         localStorage.setItem('escrow_status', 'pending');
-        localStorage.setItem(
-          'escrow_id',
-          Math.floor(Math.random() * 90000000) + 10000000
-        );
+        localStorage.setItem('escrow_id', Math.floor(Math.random() * 90000000) + 10000000);
 
-        // Show status page
         $('.order-step').removeClass('active').addClass('hidden');
         $('#order-status-page').removeClass('hidden').addClass('active');
         
-        // Update status display
         $('#status-role').text(localStorage.getItem('escrow_role'));
         $('#status-counterparty').text(localStorage.getItem('escrow_counterparty'));
         $('#status-amount').text(localStorage.getItem('escrow_amount') + ' BTC');
@@ -834,28 +1052,20 @@
       $('#swap-form').on('submit', function (e) {
         e.preventDefault();
         
-        // Save form data to localStorage
         localStorage.setItem('swap_amount', $('#swap-amount').val());
         localStorage.setItem('swap_monero_address', $('#monero-address').val());
         
-        // Show deposit page
         $('.swap-step').removeClass('active').addClass('hidden');
         $('#swap-deposit-page').removeClass('hidden').addClass('active');
       });
       
       $('#swap-proceed-btn').on('click', function() {
-        // Save status to localStorage
         localStorage.setItem('swap_status', 'pending');
-        localStorage.setItem(
-          'swap_id',
-          Math.floor(Math.random() * 90000000) + 10000000
-        );
+        localStorage.setItem('swap_id', Math.floor(Math.random() * 90000000) + 10000000);
         
-        // Show status page
         $('.swap-step').removeClass('active').addClass('hidden');
         $('#swap-status-page').removeClass('hidden').addClass('active');
         
-        // Update status display
         $('#status-swap-amount').text(localStorage.getItem('swap_amount') + ' BTC');
         $('#status-monero-address').text(localStorage.getItem('swap_monero_address'));
         $('#status-swap-id').text(localStorage.getItem('swap_id'));
@@ -875,7 +1085,7 @@
         });
       });
       
-      // === Clean reviews generator: 30 realistic anonymous reviews, ratings 3.8 - 4.5 ===
+      // Reviews generator
       function generateReviews() {
         const reviewsContainer = $('#reviews-container');
         reviewsContainer.empty();
@@ -922,7 +1132,6 @@
           "Professional team and well-structured escrow flow."
         ];
 
-        // Ratings chosen to fit 3.8 - 4.5 range
         const ratings = [
           4.2,4.0,4.3,3.9,4.5,4.1,4.0,4.4,3.8,4.2,
           4.3,4.1,4.0,4.4,3.9,4.5,4.1,4.2,4.0,3.9,
@@ -934,29 +1143,28 @@
           const text = reviews[i];
           const rating = ratings[i];
 
-          // Star rendering logic: full, half (if fraction >=0.25 && <0.75), or extra full for >=0.75
           const fullStars = Math.floor(rating);
           const fraction = rating - fullStars;
           const icons = [];
 
           for (let s = 0; s < fullStars; s++) {
-            icons.push('<i class="fas fa-star text-secondary-color"></i>');
+            icons.push('<i class="fas fa-star icon-secondary"></i>');
           }
 
           if (fraction >= 0.75) {
-            icons.push('<i class="fas fa-star text-secondary-color"></i>');
+            icons.push('<i class="fas fa-star icon-secondary"></i>');
           } else if (fraction >= 0.25) {
-            icons.push('<i class="fas fa-star-half-alt text-secondary-color"></i>');
+            icons.push('<i class="fas fa-star-half-alt icon-secondary"></i>');
           }
 
           while (icons.length < 5) {
-            icons.push('<i class="far fa-star text-gray-600"></i>');
+            icons.push('<i class="far fa-star" style="color: #666;"></i>');
           }
 
           const reviewCard = $(`
-            <div class="card mb-4">
+            <div class="card">
               <div class="font-semibold mb-2">${name}</div>
-              <div class="mb-2 review-stars flex items-center">${icons.join('')}</div>
+              <div class="mb-2 review-stars">${icons.join('')}</div>
               <p class="text-gray-300">${text}</p>
             </div>
           `);
@@ -965,10 +1173,8 @@
         }
       }
 
-      // Initialize reviews
       generateReviews();
     });
   </script>
 </body>
 </html>
-
