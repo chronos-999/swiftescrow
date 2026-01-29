@@ -35,13 +35,11 @@
       overflow-x: hidden;
     }
 
-    /* Light mode */
     body.light-mode {
       background-color: var(--light-bg);
       color: var(--light-text);
     }
 
-    /* Escrow-themed background pattern */
     body::before {
       content: '';
       position: fixed;
@@ -82,7 +80,6 @@
         repeating-linear-gradient(90deg, transparent, transparent 2px, rgba(0, 180, 200, 0.05) 2px, rgba(0, 180, 200, 0.05) 4px);
     }
 
-    /* Floating shield decorations */
     .floating-icon {
       position: fixed;
       font-size: 120px;
@@ -221,7 +218,7 @@
       padding: 16px;
     }
 
-    .form-input {
+    .form-input, .form-select {
       background-color: rgba(255, 255, 255, 0.05);
       border: 1px solid rgba(255, 255, 255, 0.15);
       border-radius: 10px;
@@ -231,13 +228,14 @@
       width: 100%;
     }
 
-    body.light-mode .form-input {
+    body.light-mode .form-input,
+    body.light-mode .form-select {
       background-color: rgba(0, 0, 0, 0.03);
       border: 1px solid rgba(0, 0, 0, 0.1);
       color: var(--light-text);
     }
 
-    .form-input:focus {
+    .form-input:focus, .form-select:focus {
       border-color: var(--primary-color);
       outline: none;
       box-shadow: 0 0 0 3px rgba(0, 229, 255, 0.1);
@@ -352,7 +350,6 @@
       font-size: 1rem;
     }
 
-    /* Navigation styling */
     nav {
       background-color: rgba(10, 14, 26, 0.95);
       backdrop-filter: blur(10px);
@@ -364,7 +361,6 @@
       border-bottom: 1px solid rgba(0, 100, 200, 0.1);
     }
 
-    /* Theme toggle button */
     .theme-toggle {
       width: 50px;
       height: 26px;
@@ -401,7 +397,6 @@
       transform: translateX(24px);
     }
 
-    /* Icon colors */
     .icon-primary {
       color: var(--primary-color);
     }
@@ -410,7 +405,6 @@
       color: var(--secondary-color);
     }
 
-    /* Scrollbar */
     ::-webkit-scrollbar {
       width: 10px;
     }
@@ -432,13 +426,11 @@
       opacity: 0.8;
     }
 
-    /* Text colors for light mode */
     body.light-mode .text-gray-300,
     body.light-mode .text-gray-400 {
       color: #4a5568 !important;
     }
 
-    /* Footer */
     footer {
       background-color: rgba(10, 14, 26, 0.95);
       border-top: 1px solid rgba(0, 229, 255, 0.1);
@@ -456,16 +448,99 @@
     body.light-mode footer .text-gray-500 {
       color: #718096 !important;
     }
+
+    /* Swap specific styles */
+    .coin-selector {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(120px, 1fr));
+      gap: 12px;
+      margin-bottom: 20px;
+    }
+
+    .coin-option {
+      background: rgba(255, 255, 255, 0.05);
+      border: 2px solid rgba(255, 255, 255, 0.1);
+      border-radius: 12px;
+      padding: 16px;
+      cursor: pointer;
+      transition: all 0.3s;
+      text-align: center;
+    }
+
+    body.light-mode .coin-option {
+      background: rgba(0, 0, 0, 0.03);
+      border: 2px solid rgba(0, 0, 0, 0.1);
+    }
+
+    .coin-option:hover {
+      border-color: var(--primary-color);
+      transform: translateY(-2px);
+    }
+
+    .coin-option.selected {
+      border-color: var(--primary-color);
+      background: rgba(0, 229, 255, 0.1);
+      box-shadow: 0 0 20px rgba(0, 229, 255, 0.2);
+    }
+
+    .coin-icon-large {
+      font-size: 2rem;
+      margin-bottom: 8px;
+    }
+
+    .price-display {
+      background: linear-gradient(135deg, rgba(0, 229, 255, 0.1), rgba(255, 123, 0, 0.1));
+      border: 1px solid rgba(0, 229, 255, 0.3);
+      border-radius: 12px;
+      padding: 20px;
+      margin: 20px 0;
+    }
+
+    .conversion-arrow {
+      font-size: 2rem;
+      color: var(--primary-color);
+      text-align: center;
+      margin: 20px 0;
+    }
+
+    .live-price-badge {
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      background: rgba(0, 229, 255, 0.1);
+      border: 1px solid rgba(0, 229, 255, 0.3);
+      padding: 6px 12px;
+      border-radius: 20px;
+      font-size: 0.85rem;
+      font-weight: 600;
+    }
+
+    .pulse-dot {
+      width: 8px;
+      height: 8px;
+      background: #00ff88;
+      border-radius: 50%;
+      animation: pulse 2s infinite;
+    }
+
+    @keyframes shimmer {
+      0% { background-position: -1000px 0; }
+      100% { background-position: 1000px 0; }
+    }
+
+    .loading-shimmer {
+      background: linear-gradient(90deg, transparent 0%, rgba(0, 229, 255, 0.2) 50%, transparent 100%);
+      background-size: 1000px 100%;
+      animation: shimmer 2s infinite;
+    }
   </style>
 </head>
 <body class="dark-mode">
   
-  <!-- Floating decorative icons -->
   <i class="fas fa-shield-alt floating-icon icon-1"></i>
   <i class="fas fa-lock floating-icon icon-2"></i>
   <i class="fas fa-handshake floating-icon icon-3"></i>
 
-  <!-- Navigation -->
   <nav class="sticky top-0 z-50 shadow-lg">
     <div class="container mx-auto px-4 py-3 flex flex-wrap justify-between items-center">
       <div class="flex items-center">
@@ -490,7 +565,6 @@
     </div>
   </nav>
 
-  <!-- Main Content -->
   <main class="container mx-auto px-4 py-8 relative z-1">
     <!-- Home Section -->
     <section id="home" class="section active py-8">
@@ -509,13 +583,13 @@
       <div class="grid grid-cols-1 md:grid-cols-2 gap-8 mb-16">
         <div class="card stats-item">
           <h3 class="text-xl font-semibold mb-2">Customers Served</h3>
-          <p class="text-4xl font-bold icon-primary mb-2">500+</p>
+          <p class="text-4xl font-bold icon-primary mb-2">15,000+</p>
           <p class="text-gray-400">Trusted by clients worldwide</p>
         </div>
 
         <div class="card stats-item">
           <h3 class="text-xl font-semibold mb-2">Amount Handled</h3>
-          <p class="text-4xl font-bold icon-secondary mb-2">$120K+</p>
+          <p class="text-4xl font-bold icon-secondary mb-2">$250M+</p>
           <p class="text-gray-400">In secure transactions</p>
         </div>
       </div>
@@ -660,7 +734,6 @@
     <section id="order" class="section py-8">
       <h2 class="text-3xl font-bold mb-8 text-center">Place an Escrow Order</h2>
 
-      <!-- Order Form Page -->
       <div id="order-form-page" class="order-step active">
         <div class="card max-w-2xl mx-auto">
           <form id="escrow-form" class="space-y-4">
@@ -705,7 +778,6 @@
         </div>
       </div>
 
-      <!-- Payment Page -->
       <div id="order-payment-page" class="order-step hidden">
         <div class="card max-w-2xl mx-auto">
           <h3 class="text-xl font-semibold mb-4">Make Your Payment</h3>
@@ -724,7 +796,6 @@
         </div>
       </div>
 
-      <!-- Status Page -->
       <div id="order-status-page" class="order-step hidden">
         <div class="card max-w-2xl mx-auto">
           <h3 class="text-xl font-semibold mb-4">Transaction Status</h3>
@@ -763,100 +834,251 @@
       </div>
     </section>
 
-    <!-- Swap Coin Section -->
+    <!-- Enhanced Swap Coin Section -->
     <section id="swap" class="section py-8">
-      <h2 class="text-3xl font-bold mb-8 text-center">Swap Bitcoin to Monero</h2>
+      <h2 class="text-4xl md:text-5xl font-bold mb-4 text-center">
+        <i class="fas fa-exchange-alt icon-primary"></i> Crypto Swap to Monero
+      </h2>
+      <p class="text-center text-gray-300 mb-8">
+        <span class="live-price-badge">
+          <span class="pulse-dot"></span>
+          Live Market Rates
+        </span>
+      </p>
 
       <!-- Swap Form Page -->
       <div id="swap-form-page" class="swap-step active">
-        <div class="card max-w-2xl mx-auto">
-          <form id="swap-form" class="space-y-4">
-            <div class="mb-4">
-              <label for="swap-amount" class="form-label">Bitcoin Amount to Swap</label>
-              <input
-                type="number"
-                step="0.00000001"
-                min="0.0001"
-                id="swap-amount"
-                class="form-input"
-                required
-              />
+        <div class="card max-w-4xl mx-auto">
+          <div class="grid md:grid-cols-2 gap-8">
+            <!-- Send Section -->
+            <div>
+              <h3 class="text-xl font-semibold mb-4 flex items-center gap-2">
+                <i class="fas fa-arrow-up icon-secondary"></i> You Send
+              </h3>
+              
+              <div class="coin-selector" id="send-coin-selector">
+                <div class="coin-option selected" data-coin="BTC">
+                  <div class="coin-icon-large"><i class="fab fa-bitcoin" style="color: #f7931a;"></i></div>
+                  <div class="font-semibold">BTC</div>
+                  <div class="text-xs text-gray-400" id="btc-price">Loading...</div>
+                </div>
+                
+                <div class="coin-option" data-coin="LTC">
+                  <div class="coin-icon-large"><i class="fab fa-litecoin" style="color: #345d9d;"></i></div>
+                  <div class="font-semibold">LTC</div>
+                  <div class="text-xs text-gray-400" id="ltc-price">Loading...</div>
+                </div>
+                
+                <div class="coin-option" data-coin="ETH">
+                  <div class="coin-icon-large"><i class="fab fa-ethereum" style="color: #627eea;"></i></div>
+                  <div class="font-semibold">ETH</div>
+                  <div class="text-xs text-gray-400" id="eth-price">Loading...</div>
+                </div>
+                
+                <div class="coin-option" data-coin="USDT">
+                  <div class="coin-icon-large"><i class="fas fa-dollar-sign" style="color: #26a17b;"></i></div>
+                  <div class="font-semibold">USDT</div>
+                  <div class="text-xs text-gray-400" id="usdt-price">$1.00</div>
+                </div>
+              </div>
+
+              <div class="mb-4">
+                <label for="send-amount" class="form-label">Amount to Send</label>
+                <input
+                  type="number"
+                  step="0.00000001"
+                  min="0.0001"
+                  id="send-amount"
+                  class="form-input text-2xl font-bold"
+                  placeholder="0.00"
+                  required
+                />
+                <div class="text-xs text-gray-400 mt-2" id="send-usd-value">≈ $0.00 USD</div>
+              </div>
             </div>
 
-            <div class="mb-4">
-              <label for="monero-address" class="form-label">Your Monero Wallet Address</label>
-              <input type="text" id="monero-address" class="form-input" required />
-            </div>
+            <!-- Receive Section -->
+            <div>
+              <h3 class="text-xl font-semibold mb-4 flex items-center gap-2">
+                <i class="fas fa-arrow-down" style="color: #00ff88;"></i> You Receive
+              </h3>
+              
+              <div class="coin-selector">
+                <div class="coin-option selected" style="grid-column: 1 / -1;">
+                  <div class="coin-icon-large"><i class="fas fa-coins" style="color: #ff6600;"></i></div>
+                  <div class="font-semibold">XMR (Monero)</div>
+                  <div class="text-xs text-gray-400" id="xmr-price">Loading...</div>
+                </div>
+              </div>
 
-            <button type="submit" id="swap-next-btn" class="btn-gradient w-full">Next</button>
-          </form>
+              <div class="mb-4">
+                <label for="receive-amount" class="form-label">Amount to Receive</label>
+                <input
+                  type="text"
+                  id="receive-amount"
+                  class="form-input text-2xl font-bold"
+                  placeholder="0.00"
+                  readonly
+                />
+                <div class="text-xs text-gray-400 mt-2" id="receive-usd-value">≈ $0.00 USD</div>
+              </div>
+
+              <div class="mb-4">
+                <label for="xmr-address" class="form-label">Your XMR Wallet Address</label>
+                <input
+                  type="text"
+                  id="xmr-address"
+                  class="form-input font-mono text-sm"
+                  placeholder="Enter your Monero wallet address"
+                  required
+                />
+              </div>
+            </div>
+          </div>
+
+          <!-- Exchange Rate Display -->
+          <div class="price-display">
+            <div class="flex items-center justify-between flex-wrap gap-4">
+              <div>
+                <div class="text-sm text-gray-400 mb-1">Exchange Rate</div>
+                <div class="text-xl font-bold" id="exchange-rate">1 BTC = 0 XMR</div>
+              </div>
+              <div>
+                <div class="text-sm text-gray-400 mb-1">Network Fee</div>
+                <div class="text-lg font-semibold">2%</div>
+              </div>
+              <div>
+                <div class="text-sm text-gray-400 mb-1">Processing Time</div>
+                <div class="text-lg font-semibold">15-30 min</div>
+              </div>
+            </div>
+          </div>
+
+          <button type="button" id="swap-calculate-btn" class="btn-gradient w-full mb-3">
+            <i class="fas fa-calculator"></i> Calculate & Continue
+          </button>
+          <p class="text-xs text-center text-gray-400">
+            <i class="fas fa-info-circle"></i> Rates update every 30 seconds
+          </p>
         </div>
       </div>
 
       <!-- Deposit Info Page -->
       <div id="swap-deposit-page" class="swap-step hidden">
-        <div class="card max-w-2xl mx-auto">
-          <h3 class="text-xl font-semibold mb-4">Bitcoin Deposit Information</h3>
-          <p class="mb-4 text-gray-300">
-            Please send your Bitcoin to the following wallet address:
-          </p>
+        <div class="card max-w-3xl mx-auto">
+          <div class="text-center mb-6">
+            <i class="fas fa-paper-plane text-6xl icon-primary mb-4"></i>
+            <h3 class="text-2xl font-semibold">Send Your <span id="deposit-coin-name">Bitcoin</span></h3>
+          </div>
 
-          <div class="wallet-address mb-4 text-center">
-            bc1qvrfgyfkcjm7us5azz8ag6qzdq9pzy5wsjf2e7r
-            <button type="button" id="copy-swap-wallet-btn" class="ml-2 icon-primary">
-              <i class="fas fa-copy"></i>
-            </button>
+          <div class="price-display mb-6">
+            <div class="grid md:grid-cols-3 gap-4 text-center">
+              <div>
+                <div class="text-sm text-gray-400 mb-1">You Send</div>
+                <div class="text-2xl font-bold" id="confirm-send-amount">0 BTC</div>
+              </div>
+              <div class="conversion-arrow">
+                <i class="fas fa-arrow-right"></i>
+              </div>
+              <div>
+                <div class="text-sm text-gray-400 mb-1">You Receive</div>
+                <div class="text-2xl font-bold" style="color: #00ff88;" id="confirm-receive-amount">0 XMR</div>
+              </div>
+            </div>
+          </div>
+
+          <div class="mb-6">
+            <h4 class="font-semibold mb-3">
+              <i class="fas fa-wallet icon-primary"></i> Deposit Address (<span id="network-type">Bitcoin</span>)
+            </h4>
+            <div class="wallet-address text-center">
+              <div id="deposit-address" class="mb-2">bc1qvrfgyfkcjm7us5azz8ag6qzdq9pzy5wsjf2e7r</div>
+              <button type="button" id="copy-deposit-btn" class="btn-gradient mt-2">
+                <i class="fas fa-copy"></i> Copy Address
+              </button>
+            </div>
           </div>
 
           <div class="bg-amber-900 bg-opacity-20 border border-amber-800 rounded-lg p-4 mb-6">
-            <h4 class="font-semibold text-amber-400 mb-2">Important Instructions:</h4>
-            <p class="text-gray-300">
-              Email screenshot of the transaction to: 
-              <a href="mailto:swiftescrow@keemail.me" class="icon-primary hover:underline">swiftescrow@keemail.me</a>
-              for swift response. Once transaction is confirmed your Monero will be deposited to your wallet.
-              Kindly ensure the swap is only working for Bitcoin to Monero.
-            </p>
+            <h4 class="font-semibold text-amber-400 mb-2">
+              <i class="fas fa-exclamation-triangle"></i> Important Instructions
+            </h4>
+            <ul class="text-sm text-gray-300 space-y-2">
+              <li>• Send EXACTLY the amount shown above to the deposit address</li>
+              <li>• Email screenshot of transaction to: <a href="mailto:swiftescrow@keemail.me" class="icon-primary hover:underline">swiftescrow@keemail.me</a></li>
+              <li>• Include your Transaction ID: <strong class="font-mono" id="preview-tx-id">SW-XXXXXX</strong></li>
+              <li>• XMR will be sent after confirmation (15-30 minutes)</li>
+            </ul>
           </div>
 
-          <div class="text-sm text-gray-400 mb-6">
-            <p class="mb-2"><strong>Expected exchange rate:</strong> Market rate at time of confirmation</p>
-            <p><strong>Estimated processing time:</strong> 15-30 minutes after confirmation</p>
+          <div class="grid md:grid-cols-2 gap-4">
+            <button type="button" id="swap-proceed-btn" class="btn-gradient w-full">
+              <i class="fas fa-check"></i> I've Sent the Payment
+            </button>
+            <button type="button" id="swap-back-btn" class="bg-gray-700 hover:bg-gray-600 text-white font-semibold py-3 px-6 rounded-full transition">
+              <i class="fas fa-arrow-left"></i> Go Back
+            </button>
           </div>
-
-          <button type="button" id="swap-proceed-btn" class="btn-gradient w-full mb-4">Proceed</button>
-          <a href="javascript:void(0)" id="swap-start-over" class="icon-primary hover:underline">Start Over</a>
         </div>
       </div>
 
       <!-- Swap Status Page -->
       <div id="swap-status-page" class="swap-step hidden">
-        <div class="card max-w-2xl mx-auto">
-          <h3 class="text-xl font-semibold mb-4">Swap Transaction Status</h3>
-
-          <div class="flex items-center mb-6">
-            <div class="status-indicator status-pending mr-3"></div>
-            <span class="text-lg" id="swap-status-text">Pending</span>
-          </div>
-
-          <div class="bg-gray-800 p-4 rounded-lg mb-6">
-            <h4 class="font-semibold mb-2">Swap Details</h4>
-            <div class="grid grid-cols-1 md:grid-cols-2 gap-y-2 text-sm text-gray-300">
-              <div>Bitcoin Amount:</div>
-              <div id="status-swap-amount">-</div>
-
-              <div>Monero Address:</div>
-              <div id="status-monero-address">-</div>
-
-              <div>Swap ID:</div>
-              <div>SW-<span id="status-swap-id">25791364</span></div>
+        <div class="card max-w-3xl mx-auto">
+          <div class="text-center mb-6">
+            <i class="fas fa-clock text-6xl icon-secondary mb-4"></i>
+            <h3 class="text-2xl font-semibold mb-2">Swap In Progress</h3>
+            <div class="flex items-center justify-center gap-2">
+              <div class="status-indicator status-pending"></div>
+              <span class="text-lg" id="swap-status-text">Awaiting Confirmation</span>
             </div>
           </div>
 
-          <p class="text-sm text-gray-400 mb-6">
-            Your swap is being processed. Monero will be sent to your wallet after Bitcoin confirmation.
-          </p>
+          <div class="bg-gray-800 p-6 rounded-lg mb-6">
+            <h4 class="font-semibold mb-4 text-center">Transaction Details</h4>
+            <div class="grid md:grid-cols-2 gap-4 text-sm">
+              <div class="space-y-2">
+                <div class="flex justify-between">
+                  <span class="text-gray-400">Transaction ID:</span>
+                  <span class="font-mono font-semibold" id="status-tx-id">SW-XXXXXX</span>
+                </div>
+                <div class="flex justify-between">
+                  <span class="text-gray-400">From:</span>
+                  <span class="font-semibold" id="status-from-coin">BTC</span>
+                </div>
+                <div class="flex justify-between">
+                  <span class="text-gray-400">Amount Sent:</span>
+                  <span class="font-semibold" id="status-send-amt">0.00</span>
+                </div>
+              </div>
+              <div class="space-y-2">
+                <div class="flex justify-between">
+                  <span class="text-gray-400">To:</span>
+                  <span class="font-semibold">XMR</span>
+                </div>
+                <div class="flex justify-between">
+                  <span class="text-gray-400">Amount Receiving:</span>
+                  <span class="font-semibold" id="status-receive-amt">0.00</span>
+                </div>
+                <div class="flex justify-between">
+                  <span class="text-gray-400">XMR Address:</span>
+                  <span class="font-mono text-xs" id="status-xmr-addr">...</span>
+                </div>
+              </div>
+            </div>
+          </div>
 
-          <a href="javascript:void(0)" id="swap-restart" class="icon-primary hover:underline">Start Over</a>
+          <div class="bg-blue-900 bg-opacity-20 border border-blue-800 rounded-lg p-4 mb-6 text-center">
+            <p class="text-sm text-gray-300">
+              <i class="fas fa-info-circle icon-primary"></i>
+              Your swap is being processed. Monero will be sent to your wallet after confirmation.
+              You will receive email updates at each stage.
+            </p>
+          </div>
+
+          <button type="button" id="swap-new-transaction" class="btn-gradient w-full">
+            <i class="fas fa-plus"></i> Start New Swap
+          </button>
         </div>
       </div>
     </section>
@@ -928,9 +1150,7 @@
     <!-- Reviews Section -->
     <section id="reviews" class="section py-8">
       <h2 class="text-3xl font-bold mb-8 text-center">Customer Reviews</h2>
-      <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6" id="reviews-container">
-        <!-- Review cards will be dynamically inserted here by JavaScript -->
-      </div>
+      <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6" id="reviews-container"></div>
     </section>
   </main>
 
@@ -941,11 +1161,7 @@
           <h3 class="logo">Swift Escrow & Swap</h3>
         </div>
         <div class="flex items-center">
-          <a
-            href="https://t.me/Escrowservice101_bot"
-            target="_blank"
-            class="text-2xl mx-2 icon-primary transition-colors"
-          >
+          <a href="https://t.me/Escrowservice101_bot" target="_blank" class="text-2xl mx-2 icon-primary transition-colors">
             <i class="fab fa-telegram"></i>
           </a>
         </div>
@@ -962,12 +1178,194 @@
   
   <script id="app-script">
     $(document).ready(function () {
+      // Crypto prices storage
+      let cryptoPrices = {
+        BTC: 0,
+        LTC: 0,
+        ETH: 0,
+        USDT: 1.00,
+        XMR: 0
+      };
+
+      let selectedCoin = 'BTC';
+      let exchangeRates = {};
+
+      // Deposit addresses
+      const depositAddresses = {
+        BTC: 'bc1qvrfgyfkcjm7us5azz8ag6qzdq9pzy5wsjf2e7r',
+        LTC: 'ltc1qvxnrpg6g3vv68pyuppyrwjynggm7mh37fzvtkt',
+        ETH: '0xD283a690F43243A42Af8BD3bE3652EFc7494B71C',
+        USDT: '0xD283a690F43243A42Af8BD3bE3652EFc7494B71C'
+      };
+
+      const coinNames = {
+        BTC: 'Bitcoin',
+        LTC: 'Litecoin',
+        ETH: 'Ethereum',
+        USDT: 'Tether (BSC BEP-20)'
+      };
+
+      // Generate unique transaction ID
+      function generateTxId() {
+        const timestamp = Date.now();
+        const random = Math.floor(Math.random() * 10000);
+        return `SW-${timestamp}${random}`;
+      }
+
+      // Fetch live prices from CoinGecko
+      async function fetchPrices() {
+        try {
+          const response = await fetch('https://api.coingecko.com/api/v3/simple/price?ids=bitcoin,litecoin,ethereum,monero&vs_currencies=usd');
+          const data = await response.json();
+          
+          cryptoPrices.BTC = data.bitcoin.usd;
+          cryptoPrices.LTC = data.litecoin.usd;
+          cryptoPrices.ETH = data.ethereum.usd;
+          cryptoPrices.XMR = data.monero.usd;
+
+          // Calculate exchange rates
+          exchangeRates.BTC = cryptoPrices.BTC / cryptoPrices.XMR;
+          exchangeRates.LTC = cryptoPrices.LTC / cryptoPrices.XMR;
+          exchangeRates.ETH = cryptoPrices.ETH / cryptoPrices.XMR;
+          exchangeRates.USDT = cryptoPrices.USDT / cryptoPrices.XMR;
+
+          // Update UI
+          $('#btc-price').text('$' + cryptoPrices.BTC.toLocaleString());
+          $('#ltc-price').text('$' + cryptoPrices.LTC.toLocaleString());
+          $('#eth-price').text('$' + cryptoPrices.ETH.toLocaleString());
+          $('#xmr-price').text('$' + cryptoPrices.XMR.toLocaleString());
+          
+          updateExchangeRate();
+          calculateConversion();
+        } catch (error) {
+          console.error('Error fetching prices:', error);
+          setTimeout(fetchPrices, 5000); // Retry after 5 seconds
+        }
+      }
+
+      // Update exchange rate display
+      function updateExchangeRate() {
+        const rate = exchangeRates[selectedCoin];
+        if (rate) {
+          $('#exchange-rate').text(`1 ${selectedCoin} = ${rate.toFixed(6)} XMR`);
+        }
+      }
+
+      // Calculate conversion
+      function calculateConversion() {
+        const sendAmount = parseFloat($('#send-amount').val()) || 0;
+        const rate = exchangeRates[selectedCoin] || 0;
+        const fee = 0.02; // 2% fee
+        
+        const receiveAmount = sendAmount * rate * (1 - fee);
+        const sendUsdValue = sendAmount * cryptoPrices[selectedCoin];
+        const receiveUsdValue = receiveAmount * cryptoPrices.XMR;
+
+        $('#receive-amount').val(receiveAmount.toFixed(8));
+        $('#send-usd-value').text('≈ $' + sendUsdValue.toLocaleString(undefined, {minimumFractionDigits: 2, maximumFractionDigits: 2}));
+        $('#receive-usd-value').text('≈ $' + receiveUsdValue.toLocaleString(undefined, {minimumFractionDigits: 2, maximumFractionDigits: 2}));
+      }
+
+      // Coin selection
+      $('#send-coin-selector .coin-option').on('click', function() {
+        $('#send-coin-selector .coin-option').removeClass('selected');
+        $(this).addClass('selected');
+        selectedCoin = $(this).data('coin');
+        updateExchangeRate();
+        calculateConversion();
+      });
+
+      // Amount input
+      $('#send-amount').on('input', calculateConversion);
+
+      // Calculate & Continue button
+      $('#swap-calculate-btn').on('click', function() {
+        const sendAmount = parseFloat($('#send-amount').val());
+        const xmrAddress = $('#xmr-address').val().trim();
+        
+        if (!sendAmount || sendAmount <= 0) {
+          alert('Please enter a valid amount to send.');
+          return;
+        }
+        
+        if (!xmrAddress) {
+          alert('Please enter your Monero wallet address.');
+          return;
+        }
+
+        // Generate unique transaction ID
+        const txId = generateTxId();
+        localStorage.setItem('swap_tx_id', txId);
+        localStorage.setItem('swap_from_coin', selectedCoin);
+        localStorage.setItem('swap_send_amount', sendAmount);
+        localStorage.setItem('swap_receive_amount', $('#receive-amount').val());
+        localStorage.setItem('swap_xmr_address', xmrAddress);
+
+        // Update deposit page
+        $('#deposit-coin-name').text(coinNames[selectedCoin]);
+        $('#network-type').text(selectedCoin === 'USDT' ? 'BSC (BEP-20)' : selectedCoin === 'ETH' ? 'ERC-20' : coinNames[selectedCoin]);
+        $('#deposit-address').text(depositAddresses[selectedCoin]);
+        $('#confirm-send-amount').text(sendAmount.toFixed(8) + ' ' + selectedCoin);
+        $('#confirm-receive-amount').text($('#receive-amount').val() + ' XMR');
+        $('#preview-tx-id').text(txId);
+
+        // Show deposit page
+        $('.swap-step').removeClass('active').addClass('hidden');
+        $('#swap-deposit-page').removeClass('hidden').addClass('active');
+      });
+
+      // Copy deposit address
+      $('#copy-deposit-btn').on('click', function() {
+        const address = $('#deposit-address').text();
+        navigator.clipboard.writeText(address).then(function() {
+          const btn = $('#copy-deposit-btn');
+          const originalHtml = btn.html();
+          btn.html('<i class="fas fa-check"></i> Copied!');
+          setTimeout(() => btn.html(originalHtml), 2000);
+        });
+      });
+
+      // Back button
+      $('#swap-back-btn').on('click', function() {
+        $('.swap-step').removeClass('active').addClass('hidden');
+        $('#swap-form-page').removeClass('hidden').addClass('active');
+      });
+
+      // Proceed button
+      $('#swap-proceed-btn').on('click', function() {
+        // Update status page
+        $('#status-tx-id').text(localStorage.getItem('swap_tx_id'));
+        $('#status-from-coin').text(localStorage.getItem('swap_from_coin'));
+        $('#status-send-amt').text(localStorage.getItem('swap_send_amount') + ' ' + localStorage.getItem('swap_from_coin'));
+        $('#status-receive-amt').text(localStorage.getItem('swap_receive_amount') + ' XMR');
+        $('#status-xmr-addr').text(localStorage.getItem('swap_xmr_address').substring(0, 20) + '...');
+
+        // Show status page
+        $('.swap-step').removeClass('active').addClass('hidden');
+        $('#swap-status-page').removeClass('hidden').addClass('active');
+      });
+
+      // New transaction button
+      $('#swap-new-transaction').on('click', function() {
+        $('#send-amount').val('');
+        $('#receive-amount').val('');
+        $('#xmr-address').val('');
+        $('#send-usd-value').text('≈ $0.00 USD');
+        $('#receive-usd-value').text('≈ $0.00 USD');
+        
+        $('.swap-step').removeClass('active').addClass('hidden');
+        $('#swap-form-page').removeClass('hidden').addClass('active');
+      });
+
+      // Initialize prices and update every 30 seconds
+      fetchPrices();
+      setInterval(fetchPrices, 30000);
+
       // Theme Toggle
       const themeToggle = $('#theme-toggle');
       const body = $('body');
       const themeIcon = $('#theme-icon');
       
-      // Check for saved theme preference or default to dark
       const currentTheme = localStorage.getItem('theme') || 'dark';
       if (currentTheme === 'light') {
         body.removeClass('dark-mode').addClass('light-mode');
@@ -990,25 +1388,19 @@
       $('.nav-link').on('click', function (e) {
         e.preventDefault();
         const section = $(this).data('section');
-
         window.location.hash = section;
-
-        // Update navigation
         $('.nav-link').removeClass('active');
         $(this).addClass('active');
-
-        // Show section
         $('.section').removeClass('active').hide();
         $(`#${section}`).addClass('active').show();
       });
 
-      // Check URL on page load
       const hash = window.location.hash.substring(1);
       if (hash) {
         $(`.nav-link[data-section="${hash}"]`).click();
       }
 
-      // Accordion functionality
+      // Accordion
       $('.accordion-header').on('click', function () {
         const content = $(this).next('.accordion-content');
         $('.accordion-content').not(content).removeClass('active');
@@ -1018,12 +1410,10 @@
       // Order workflow
       $('#escrow-form').on('submit', function (e) {
         e.preventDefault();
-
         localStorage.setItem('escrow_role', $('input[name="role"]:checked').val());
         localStorage.setItem('escrow_counterparty', $('#counterparty-contact').val());
         localStorage.setItem('escrow_description', $('#transaction-description').val());
         localStorage.setItem('escrow_amount', $('#transaction-amount').val());
-
         $('.order-step').removeClass('active').addClass('hidden');
         $('#order-payment-page').removeClass('hidden').addClass('active');
       });
@@ -1031,10 +1421,8 @@
       $('#order-proceed-btn').on('click', function () {
         localStorage.setItem('escrow_status', 'pending');
         localStorage.setItem('escrow_id', Math.floor(Math.random() * 90000000) + 10000000);
-
         $('.order-step').removeClass('active').addClass('hidden');
         $('#order-status-page').removeClass('hidden').addClass('active');
-        
         $('#status-role').text(localStorage.getItem('escrow_role'));
         $('#status-counterparty').text(localStorage.getItem('escrow_counterparty'));
         $('#status-amount').text(localStorage.getItem('escrow_amount') + ' BTC');
@@ -1048,44 +1436,14 @@
         $('#escrow-form')[0].reset();
       });
 
-      // Swap workflow
-      $('#swap-form').on('submit', function (e) {
-        e.preventDefault();
-        
-        localStorage.setItem('swap_amount', $('#swap-amount').val());
-        localStorage.setItem('swap_monero_address', $('#monero-address').val());
-        
-        $('.swap-step').removeClass('active').addClass('hidden');
-        $('#swap-deposit-page').removeClass('hidden').addClass('active');
-      });
-      
-      $('#swap-proceed-btn').on('click', function() {
-        localStorage.setItem('swap_status', 'pending');
-        localStorage.setItem('swap_id', Math.floor(Math.random() * 90000000) + 10000000);
-        
-        $('.swap-step').removeClass('active').addClass('hidden');
-        $('#swap-status-page').removeClass('hidden').addClass('active');
-        
-        $('#status-swap-amount').text(localStorage.getItem('swap_amount') + ' BTC');
-        $('#status-monero-address').text(localStorage.getItem('swap_monero_address'));
-        $('#status-swap-id').text(localStorage.getItem('swap_id'));
-      });
-      
-      $('#swap-start-over, #swap-restart').on('click', function() {
-        $('.swap-step').removeClass('active').addClass('hidden');
-        $('#swap-form-page').removeClass('hidden').addClass('active');
-        $('#swap-form')[0].reset();
-      });
-
-      // Copy wallet address
-      $('#copy-wallet-btn, #copy-swap-wallet-btn').on('click', function() {
-        const walletAddress = $(this).parent().text().trim();
+      $('#copy-wallet-btn').on('click', function() {
+        const walletAddress = 'bc1qvrfgyfkcjm7us5azz8ag6qzdq9pzy5wsjf2e7r';
         navigator.clipboard.writeText(walletAddress).then(function() {
           alert('Wallet address copied to clipboard!');
         });
       });
-      
-      // Reviews generator
+
+      // Reviews
       function generateReviews() {
         const reviewsContainer = $('#reviews-container');
         reviewsContainer.empty();
