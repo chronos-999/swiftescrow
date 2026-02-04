@@ -1084,7 +1084,7 @@
                 <div class="coin-option" data-coin="USDT">
                   <div class="coin-icon-large"><i class="fas fa-dollar-sign" style="color: #26a17b;"></i></div>
                   <div class="font-semibold">USDT</div>
-                  <div class="text-xs text-gray-400" id="usdt-price">$1.00</div>
+                  <div class="text-xs text-gray-400" id="usdt-price">Loading...</div>
                 </div>
               </div>
 
@@ -1799,7 +1799,10 @@
   
   <script id="app-script">
 $(document).ready(function () {
-  // Crypto prices storage
+
+  // ───────────────────────────────────────────────
+  // REAL-TIME PRICES FROM COINGECKO
+  // ───────────────────────────────────────────────
   let cryptoPrices = {
     BTC: 68500,
     LTC: 78.50,
@@ -1807,6 +1810,44 @@ $(document).ready(function () {
     USDT: 1.00,
     XMR: 170.00
   };
+
+  const coinIds = 'bitcoin,litecoin,ethereum,tether,monero';
+  const vsCurrency = 'usd';
+
+  function fetchLivePrices() {
+    $.ajax({
+      url: `https://api.coingecko.com/api/v3/simple/price?ids=${coinIds}&vs_currencies=${vsCurrency}`,
+      method: 'GET',
+      timeout: 8000,
+      success: function (data) {
+        if (data.bitcoin)   cryptoPrices.BTC  = data.bitcoin.usd    || cryptoPrices.BTC;
+        if (data.litecoin)  cryptoPrices.LTC  = data.litecoin.usd   || cryptoPrices.LTC;
+        if (data.ethereum)  cryptoPrices.ETH  = data.ethereum.usd   || cryptoPrices.ETH;
+        if (data.tether)    cryptoPrices.USDT = data.tether.usd     || cryptoPrices.USDT;
+        if (data.monero)    cryptoPrices.XMR  = data.monero.usd     || cryptoPrices.XMR;
+
+        updatePriceDisplay();
+        calculateConversion(); // refresh conversion if amount entered
+      },
+      error: function () {
+        console.warn('CoinGecko API failed → using fallback prices');
+      }
+    });
+  }
+
+  function updatePriceDisplay() {
+    $('#btc-price').text('$' + cryptoPrices.BTC.toLocaleString(undefined, { minimumFractionDigits: 0, maximumFractionDigits: 0 }));
+    $('#ltc-price').text('$' + cryptoPrices.LTC.toLocaleString(undefined, { minimumFractionDigits: 2, maximumFractionDigits: 2 }));
+    $('#eth-price').text('$' + cryptoPrices.ETH.toLocaleString(undefined, { minimumFractionDigits: 0, maximumFractionDigits: 0 }));
+    $('#usdt-price').text('$' + cryptoPrices.USDT.toLocaleString(undefined, { minimumFractionDigits: 2, maximumFractionDigits: 2 }));
+    $('#xmr-price').text('$' + cryptoPrices.XMR.toLocaleString(undefined, { minimumFractionDigits: 2, maximumFractionDigits: 2 }));
+
+    updateExchangeRate();
+  }
+
+  // ───────────────────────────────────────────────
+  // YOUR ORIGINAL LOGIC BELOW (UNCHANGED)
+  // ───────────────────────────────────────────────
 
   let selectedCoin = 'BTC';
   let exchangeRates = {
@@ -1816,7 +1857,6 @@ $(document).ready(function () {
     USDT: 0.0058
   };
 
-  // Deposit addresses
   const depositAddresses = {
     BTC: 'bc1qvrfgyfkcjm7us5azz8ag6qzdq9pzy5wsjf2e7r',
     LTC: 'ltc1qvxnrpg6g3vv68pyuppyrwjynggm7mh37fzvtkt',
@@ -1831,24 +1871,12 @@ $(document).ready(function () {
     USDT: 'Tether (BSC BEP-20)'
   };
 
-  // Generate unique transaction ID
   function generateTxId() {
     const timestamp = Date.now().toString().slice(-6);
     const random = Math.floor(Math.random() * 10000).toString().padStart(4, '0');
     return `SW-${timestamp}${random}`;
   }
 
-  // Update prices display on load
-  function updatePriceDisplay() {
-    $('#btc-price').text('$' + cryptoPrices.BTC.toLocaleString());
-    $('#ltc-price').text('$' + cryptoPrices.LTC.toLocaleString());
-    $('#eth-price').text('$' + cryptoPrices.ETH.toLocaleString());
-    $('#xmr-price').text('$' + cryptoPrices.XMR.toLocaleString());
-    
-    updateExchangeRate();
-  }
-
-  // Update exchange rate display
   function updateExchangeRate() {
     const rate = exchangeRates[selectedCoin];
     if (rate) {
@@ -1856,12 +1884,11 @@ $(document).ready(function () {
     }
   }
 
-  // Calculate conversion
   function calculateConversion() {
     const sendAmount = parseFloat($('#send-amount').val()) || 0;
     const rate = exchangeRates[selectedCoin] || 0;
-    const fee = 0.02; // 2% fee
-    
+    const fee = 0.02;
+
     const receiveAmount = sendAmount * rate * (1 - fee);
     const sendUsdValue = sendAmount * cryptoPrices[selectedCoin];
     const receiveUsdValue = receiveAmount * cryptoPrices.XMR;
@@ -1871,7 +1898,7 @@ $(document).ready(function () {
     $('#receive-usd-value').text('≈ $' + receiveUsdValue.toLocaleString(undefined, {minimumFractionDigits: 2, maximumFractionDigits: 2}) + ' USD');
   }
 
-  // Initialize price display
+  // Initialize
   updatePriceDisplay();
 
   // Coin selection
@@ -1885,6 +1912,10 @@ $(document).ready(function () {
 
   // Amount input
   $('#send-amount').on('input', calculateConversion);
+
+  // Start live price updates
+  fetchLivePrices();
+  setInterval(fetchLivePrices, 30000); // every 30 seconds
 
   // Mobile menu toggle
   $('.mobile-menu-toggle').on('click', function() {
@@ -1906,7 +1937,6 @@ $(document).ready(function () {
       return;
     }
 
-    // Generate unique transaction ID
     const txId = generateTxId();
     localStorage.setItem('swap_tx_id', txId);
     localStorage.setItem('swap_from_coin', selectedCoin);
@@ -1914,7 +1944,6 @@ $(document).ready(function () {
     localStorage.setItem('swap_receive_amount', $('#receive-amount').val());
     localStorage.setItem('swap_xmr_address', xmrAddress);
 
-    // Update deposit page
     $('#deposit-coin-name').text(coinNames[selectedCoin]);
     $('#network-type').text(selectedCoin === 'USDT' ? 'BSC (BEP-20)' : selectedCoin === 'ETH' ? 'ERC-20' : coinNames[selectedCoin]);
     $('#deposit-address').text(depositAddresses[selectedCoin]);
@@ -1922,7 +1951,6 @@ $(document).ready(function () {
     $('#confirm-receive-amount').text($('#receive-amount').val() + ' XMR');
     $('#preview-tx-id').text(txId);
 
-    // Show deposit page
     $('.swap-step').removeClass('active').addClass('hidden');
     $('#swap-deposit-page').removeClass('hidden').addClass('active');
   });
@@ -1946,14 +1974,12 @@ $(document).ready(function () {
 
   // Proceed button
   $('#swap-proceed-btn').on('click', function() {
-    // Update status page
     $('#status-tx-id').text(localStorage.getItem('swap_tx_id') || generateTxId());
     $('#status-from-coin').text(localStorage.getItem('swap_from_coin') || selectedCoin);
     $('#status-send-amt').text((localStorage.getItem('swap_send_amount') || '0.00') + ' ' + (localStorage.getItem('swap_from_coin') || selectedCoin));
     $('#status-receive-amt').text((localStorage.getItem('swap_receive_amount') || '0.00') + ' XMR');
     $('#status-xmr-addr').text((localStorage.getItem('swap_xmr_address') || '').substring(0, 20) + '...');
 
-    // Show status page
     $('.swap-step').removeClass('active').addClass('hidden');
     $('#swap-status-page').removeClass('hidden').addClass('active');
   });
@@ -1970,7 +1996,7 @@ $(document).ready(function () {
     $('#swap-form-page').removeClass('hidden').addClass('active');
   });
 
-  // Theme Toggle (both in nav and footer)
+  // Theme Toggle
   function toggleTheme() {
     const body = $('body');
     const navIcon = $('#theme-icon');
@@ -1991,7 +2017,6 @@ $(document).ready(function () {
   
   $('#theme-toggle, #footer-theme-toggle').on('click', toggleTheme);
   
-  // Set initial theme
   const currentTheme = localStorage.getItem('theme') || 'dark';
   const body = $('body');
   const navIcon = $('#theme-icon');
@@ -2015,50 +2040,41 @@ $(document).ready(function () {
     $('.section').removeClass('active');
     $(`#${section}`).addClass('active');
     
-    // Close mobile menu if open
     if ($(window).width() < 768) {
       $('.nav-links').removeClass('active');
     }
     
-    // Scroll to top of section
     $('html, body').animate({
       scrollTop: $(`#${section}`).offset().top - 100
     }, 500);
   });
 
-  // Special handling for FAQ link
   $('.faq-link').on('click', function(e) {
     e.preventDefault();
     const section = $(this).data('section');
     
-    // First navigate to the contact section
     $('.nav-link').removeClass('active');
     $(`.nav-link[data-section="${section}"]`).addClass('active');
     $('.section').removeClass('active');
     $(`#${section}`).addClass('active');
     
-    // Then open the FAQ accordion
     setTimeout(function() {
-      // Open the first FAQ accordion item
       const firstAccordionHeader = $('#contact .accordion-header').first();
       const firstAccordionContent = firstAccordionHeader.next('.accordion-content');
       
       firstAccordionContent.addClass('active');
       firstAccordionHeader.find('i').removeClass('fa-chevron-down').addClass('fa-chevron-up');
       
-      // Scroll to the FAQ section
       $('html, body').animate({
         scrollTop: $('#contact .accordion').offset().top - 150
       }, 500);
     }, 300);
     
-    // Close mobile menu if open
     if ($(window).width() < 768) {
       $('.nav-links').removeClass('active');
     }
   });
 
-  // Handle URL hash on page load
   const hash = window.location.hash.substring(1);
   if (hash) {
     $(`.nav-link[data-section="${hash}"]`).click();
@@ -2070,7 +2086,6 @@ $(document).ready(function () {
     $('.accordion-content').not(content).removeClass('active');
     content.toggleClass('active');
     
-    // Toggle icon
     $('.accordion-header i').removeClass('fa-chevron-up').addClass('fa-chevron-down');
     if (content.hasClass('active')) {
       $(this).find('i').removeClass('fa-chevron-down').addClass('fa-chevron-up');
@@ -2090,7 +2105,6 @@ $(document).ready(function () {
     $('#order-payment-page').removeClass('hidden').addClass('active');
   });
   
-  // Back button for order flow
   $('#order-back-btn').on('click', function() {
     $('.order-step').removeClass('active').addClass('hidden');
     $('#order-form-page').removeClass('hidden').addClass('active');
@@ -2123,7 +2137,6 @@ $(document).ready(function () {
         alert('Wallet address copied to clipboard!');
       })
       .catch(function() {
-        // Fallback for browsers that don't support clipboard API
         const tempInput = $('<input>');
         $('body').append(tempInput);
         tempInput.val(walletAddress).select();
@@ -2195,7 +2208,6 @@ $(document).ready(function () {
       const name = names[i];
       const initial = name.charAt(0);
       const text = reviews[i];
-      // Generate random rating between 3.5 and 4.8 stars
       const rating = (Math.random() * 1.3 + 3.5).toFixed(1);
       const service = services[i];
 
