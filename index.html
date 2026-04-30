@@ -140,18 +140,49 @@
       padding: 12px 28px;
       border-radius: 50px;
       font-weight: 600;
-      transition: transform 0.3s, box-shadow 0.3s;
-      box-shadow: 0 4px 15px rgba(0, 229, 255, 0.3);
+      transition: transform 0.3s cubic-bezier(0.34, 1.56, 0.64, 1), box-shadow 0.3s, filter 0.3s;
+      box-shadow: 0 4px 20px rgba(0, 229, 255, 0.4), inset 0 1px 0 rgba(255, 255, 255, 0.2);
       cursor: pointer;
+      position: relative;
+      overflow: hidden;
+    }
+
+    .btn-gradient::before {
+      content: '';
+      position: absolute;
+      top: 50%;
+      left: 50%;
+      width: 0;
+      height: 0;
+      border-radius: 50%;
+      background: rgba(255, 255, 255, 0.3);
+      transform: translate(-50%, -50%);
+      transition: width 0.6s, height 0.6s;
+      pointer-events: none;
+    }
+
+    .btn-gradient:hover::before {
+      width: 300px;
+      height: 300px;
     }
 
     .btn-gradient:hover {
-      transform: translateY(-2px);
-      box-shadow: 0 6px 20px rgba(0, 229, 255, 0.4);
+      transform: translateY(-4px) scale(1.02);
+      box-shadow: 0 8px 35px rgba(0, 229, 255, 0.5), 0 0 30px rgba(255, 123, 0, 0.3), inset 0 1px 0 rgba(255, 255, 255, 0.3);
+      filter: brightness(1.15);
+    }
+
+    .btn-gradient:active {
+      transform: translateY(-2px) scale(0.98);
     }
     
     .btn-gradient i {
       margin-right: 0.5rem;
+      transition: transform 0.3s;
+    }
+
+    .btn-gradient:hover i {
+      transform: scale(1.2) rotate(5deg);
     }
 
     .card {
@@ -219,13 +250,15 @@
     }
 
     .form-input, .form-select {
-      background-color: rgba(255, 255, 255, 0.05);
+      background-color: rgba(255, 255, 255, 0.03);
       border: 1px solid rgba(255, 255, 255, 0.15);
       border-radius: 10px;
       padding: 12px 16px;
       color: var(--text-color);
-      transition: all 0.3s;
+      transition: all 0.3s cubic-bezier(0.34, 1.56, 0.64, 1);
       width: 100%;
+      position: relative;
+      background-image: linear-gradient(rgba(255, 255, 255, 0.02), rgba(255, 255, 255, 0.02));
     }
 
     body.light-mode .form-input,
@@ -238,7 +271,15 @@
     .form-input:focus, .form-select:focus {
       border-color: var(--primary-color);
       outline: none;
-      box-shadow: 0 0 0 3px rgba(0, 229, 255, 0.1);
+      box-shadow: 0 0 0 4px rgba(0, 229, 255, 0.15), inset 0 0 10px rgba(0, 229, 255, 0.08);
+      background-color: rgba(255, 255, 255, 0.06);
+      transform: translateY(-2px);
+    }
+
+    body.light-mode .form-input:focus, 
+    body.light-mode .form-select:focus {
+      box-shadow: 0 0 0 4px rgba(0, 100, 200, 0.15), inset 0 0 10px rgba(0, 100, 200, 0.08);
+      background-color: rgba(0, 0, 0, 0.05);
     }
 
     .form-label {
@@ -246,6 +287,13 @@
       margin-bottom: 6px;
       font-weight: 500;
       color: rgba(255, 255, 255, 0.9);
+      letter-spacing: 0.5px;
+      display: block;
+      transition: color 0.3s;
+    }
+
+    .form-label:hover {
+      color: var(--primary-color);
     }
 
     body.light-mode .form-label {
@@ -253,13 +301,21 @@
     }
 
     .wallet-address {
-      background-color: rgba(255, 255, 255, 0.05);
-      padding: 16px;
-      border-radius: 12px;
+      background: linear-gradient(135deg, rgba(0, 229, 255, 0.05), rgba(255, 123, 0, 0.03));
+      padding: 20px;
+      border-radius: 14px;
       font-family: 'JetBrains Mono', monospace;
       border: 2px dashed var(--primary-color);
       user-select: all;
       word-break: break-all;
+      transition: all 0.3s;
+      position: relative;
+      animation: slideInUp 0.6s ease-out;
+    }
+
+    .wallet-address:hover {
+      background: linear-gradient(135deg, rgba(0, 229, 255, 0.08), rgba(255, 123, 0, 0.05));
+      box-shadow: 0 0 20px rgba(0, 229, 255, 0.2), inset 0 0 10px rgba(0, 229, 255, 0.1);
     }
 
     body.light-mode .wallet-address {
@@ -458,42 +514,92 @@
     }
 
     .coin-option {
-      background: rgba(255, 255, 255, 0.05);
+      background: rgba(255, 255, 255, 0.03);
       border: 2px solid rgba(255, 255, 255, 0.1);
       border-radius: 12px;
       padding: 16px;
       cursor: pointer;
-      transition: all 0.3s;
+      transition: all 0.3s cubic-bezier(0.34, 1.56, 0.64, 1);
       text-align: center;
+      position: relative;
+      overflow: hidden;
+    }
+
+    .coin-option::before {
+      content: '';
+      position: absolute;
+      top: -50%;
+      left: -50%;
+      width: 200%;
+      height: 200%;
+      background: linear-gradient(45deg, transparent 30%, rgba(255, 255, 255, 0.08) 50%, transparent 70%);
+      transform: rotate(45deg);
+      opacity: 0;
+      transition: opacity 0.5s;
     }
 
     body.light-mode .coin-option {
-      background: rgba(0, 0, 0, 0.03);
+      background: rgba(0, 0, 0, 0.02);
       border: 2px solid rgba(0, 0, 0, 0.1);
     }
 
     .coin-option:hover {
       border-color: var(--primary-color);
-      transform: translateY(-2px);
+      transform: translateY(-4px) scale(1.05);
+      box-shadow: 0 8px 25px rgba(0, 229, 255, 0.2);
+    }
+
+    .coin-option:hover::before {
+      opacity: 1;
+      animation: liquidSwipe 0.5s ease-in-out;
     }
 
     .coin-option.selected {
       border-color: var(--primary-color);
-      background: rgba(0, 229, 255, 0.1);
-      box-shadow: 0 0 20px rgba(0, 229, 255, 0.2);
+      background: linear-gradient(135deg, rgba(0, 229, 255, 0.12), rgba(255, 123, 0, 0.08));
+      box-shadow: 0 0 20px rgba(0, 229, 255, 0.3), inset 0 0 10px rgba(0, 229, 255, 0.1);
+      animation: bounce-in 0.4s ease-out;
     }
 
     .coin-icon-large {
       font-size: 2rem;
       margin-bottom: 8px;
+      transition: transform 0.3s;
+      display: inline-block;
+    }
+
+    .coin-option:hover .coin-icon-large {
+      transform: scale(1.3) rotateZ(10deg);
+    }
+
+    .coin-option.selected .coin-icon-large {
+      animation: bounce-in 0.4s ease-out;
     }
 
     .price-display {
-      background: linear-gradient(135deg, rgba(0, 229, 255, 0.1), rgba(255, 123, 0, 0.1));
-      border: 1px solid rgba(0, 229, 255, 0.3);
-      border-radius: 12px;
-      padding: 20px;
+      background: linear-gradient(135deg, rgba(0, 229, 255, 0.08), rgba(255, 123, 0, 0.08));
+      border: 2px solid rgba(0, 229, 255, 0.3);
+      border-radius: 16px;
+      padding: 24px;
       margin: 20px 0;
+      transition: all 0.3s;
+      position: relative;
+      overflow: hidden;
+    }
+
+    .price-display::before {
+      content: '';
+      position: absolute;
+      top: 0;
+      left: -100%;
+      width: 100%;
+      height: 100%;
+      background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.1), transparent);
+      transition: left 0.5s;
+    }
+
+    .price-display:hover::before {
+      left: 100%;
     }
 
     .conversion-arrow {
@@ -557,6 +663,7 @@
       border-radius: 50%;
       background: radial-gradient(circle, rgba(0,229,255,0.2) 0%, rgba(0,229,255,0) 70%);
       z-index: -1;
+      animation: pulse 8s ease-in-out infinite;
     }
 
     .hero-circle-1 {
@@ -564,6 +671,7 @@
       height: 400px;
       top: -200px;
       left: -200px;
+      animation: float 8s ease-in-out infinite;
     }
 
     .hero-circle-2 {
@@ -572,6 +680,25 @@
       bottom: -300px;
       right: -300px;
       background: radial-gradient(circle, rgba(255,123,0,0.2) 0%, rgba(255,123,0,0) 70%);
+      animation: float 10s ease-in-out infinite reverse;
+    }
+
+    .hero-content h2 {
+      animation: slideInDown 0.8s ease-out;
+      background: linear-gradient(135deg, var(--primary-color), var(--secondary-color), var(--primary-color));
+      background-size: 200% 200%;
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      background-clip: text;
+      animation: slideInDown 0.8s ease-out, liquidSwipe 4s ease-in-out infinite;
+    }
+
+    .hero-content p {
+      animation: slideInUp 0.8s ease-out 0.2s both;
+    }
+
+    .hero-content .flex {
+      animation: slideInUp 0.8s ease-out 0.4s both;
     }
     
     .testimonial-avatar {
@@ -585,22 +712,30 @@
       font-size: 1.2rem;
       color: white;
       font-weight: bold;
+      box-shadow: 0 4px 15px rgba(0, 229, 255, 0.3);
+      border: 2px solid rgba(0, 229, 255, 0.2);
+      transition: all 0.3s;
+    }
+
+    .testimonial-avatar:hover {
+      transform: scale(1.2) rotateZ(10deg);
+      box-shadow: 0 6px 25px rgba(0, 229, 255, 0.5);
     }
 
     /* Enhanced animations */
     @keyframes float {
-      0%, 100% { transform: translateY(0); }
-      50% { transform: translateY(-10px); }
+      0%, 100% { transform: translateY(0) rotateZ(0deg); }
+      50% { transform: translateY(-15px) rotateZ(1deg); }
     }
 
     .float-animation {
-      animation: float 5s ease-in-out infinite;
+      animation: float 4s ease-in-out infinite;
     }
 
     @keyframes slideInUp {
       from {
         opacity: 0;
-        transform: translateY(30px);
+        transform: translateY(40px);
       }
       to {
         opacity: 1;
@@ -611,7 +746,7 @@
     @keyframes slideInDown {
       from {
         opacity: 0;
-        transform: translateY(-30px);
+        transform: translateY(-40px);
       }
       to {
         opacity: 1;
@@ -622,38 +757,436 @@
     @keyframes fadeInScale {
       from {
         opacity: 0;
-        transform: scale(0.95);
+        transform: scale(0.9) rotateY(10deg);
       }
       to {
         opacity: 1;
-        transform: scale(1);
+        transform: scale(1) rotateY(0deg);
       }
     }
 
     @keyframes glow {
       0%, 100% {
-        box-shadow: 0 0 5px rgba(0, 229, 255, 0.5);
+        box-shadow: 0 0 5px rgba(0, 229, 255, 0.5), inset 0 0 10px rgba(0, 229, 255, 0.1);
       }
       50% {
-        box-shadow: 0 0 20px rgba(0, 229, 255, 0.8);
+        box-shadow: 0 0 30px rgba(0, 229, 255, 0.8), inset 0 0 20px rgba(0, 229, 255, 0.2);
+      }
+    }
+
+    @keyframes liquidSwipe {
+      0% {
+        background-position: -1000px 0;
+      }
+      100% {
+        background-position: 1000px 0;
+      }
+    }
+
+    @keyframes pulse-ring {
+      0% {
+        transform: scale(1);
+        opacity: 1;
+      }
+      100% {
+        transform: scale(1.8);
+        opacity: 0;
+      }
+    }
+
+    @keyframes neon-flicker {
+      0%, 19%, 21%, 23%, 25%, 54%, 56%, 100% {
+        text-shadow: 0 0 7px var(--primary-color), 0 0 10px var(--primary-color);
+      }
+      20%, 24%, 55% {
+        text-shadow: 0 0 7px var(--primary-color), 0 0 10px var(--primary-color), 0 0 21px var(--primary-color);
+      }
+    }
+
+    @keyframes bounce-in {
+      0% {
+        opacity: 0;
+        transform: scale(0.8);
+      }
+      50% {
+        opacity: 1;
+        transform: scale(1.05);
+      }
+      100% {
+        opacity: 1;
+        transform: scale(1);
       }
     }
 
     .card {
       animation: fadeInScale 0.6s ease-out;
+      position: relative;
+      overflow: hidden;
+    }
+
+    .card::before {
+      content: '';
+      position: absolute;
+      top: -50%;
+      right: -50%;
+      width: 200%;
+      height: 200%;
+      background: linear-gradient(135deg, transparent 30%, rgba(255, 255, 255, 0.1) 50%, transparent 70%);
+      transform: rotate(45deg);
+      opacity: 0;
+      transition: opacity 0.6s;
+      pointer-events: none;
+    }
+
+    .card:hover::before {
+      opacity: 1;
+      animation: liquidSwipe 0.6s ease-in-out;
     }
 
     .card:hover {
-      animation: glow 2s ease-in-out infinite;
+      animation: glow 2s ease-in-out infinite, slideInUp 0.3s ease-out;
     }
 
     /* Order section customizations */
     .order-step {
       display: none;
+      opacity: 0;
+      transform: translateY(20px);
     }
 
     .order-step.active {
       display: block;
+      opacity: 1;
+      transform: translateY(0);
+      animation: slideInUp 0.5s ease-out;
+    }
+
+    /* Progress Indicator */
+    .progress-container {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 2rem;
+      position: relative;
+    }
+
+    .progress-container::before {
+      content: '';
+      position: absolute;
+      top: 20px;
+      left: 0;
+      right: 0;
+      height: 2px;
+      background: linear-gradient(90deg, rgba(0, 229, 255, 0.2) 0%, rgba(0, 229, 255, 0.4) 50%, rgba(0, 229, 255, 0.2) 100%);
+      z-index: 0;
+    }
+
+    .progress-step {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      position: relative;
+      z-index: 1;
+      flex: 1;
+      transition: all 0.3s;
+    }
+
+    .progress-circle {
+      width: 40px;
+      height: 40px;
+      border-radius: 50%;
+      background: rgba(0, 229, 255, 0.1);
+      border: 2px solid rgba(0, 229, 255, 0.3);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 1.2rem;
+      color: var(--primary-color);
+      margin-bottom: 0.5rem;
+      transition: all 0.3s cubic-bezier(0.34, 1.56, 0.64, 1);
+    }
+
+    .progress-step.active .progress-circle {
+      background: linear-gradient(135deg, var(--primary-color), var(--secondary-color));
+      border-color: var(--primary-color);
+      box-shadow: 0 0 20px rgba(0, 229, 255, 0.6), 0 0 40px rgba(0, 229, 255, 0.3);
+      color: white;
+      transform: scale(1.15) rotateZ(5deg);
+      animation: pulse-ring 1.5s ease-out infinite;
+    }
+
+    .progress-step.completed .progress-circle {
+      background: linear-gradient(135deg, #00ff88, #00dd77);
+      border-color: #00ff88;
+      box-shadow: 0 0 15px rgba(0, 255, 136, 0.5);
+    }
+
+    .progress-label {
+      font-size: 0.85rem;
+      text-align: center;
+      color: rgba(255, 255, 255, 0.6);
+      font-weight: 600;
+      transition: all 0.3s;
+    }
+
+    .progress-step.active .progress-label {
+      color: var(--primary-color);
+      font-weight: 700;
+      animation: slideInUp 0.3s ease-out;
+    }
+
+    body.light-mode .progress-label {
+      color: rgba(0, 0, 0, 0.6);
+    }
+
+    /* Order Form Enhancements */
+    .form-group {
+      margin-bottom: 1.5rem;
+    }
+
+    .form-group:last-child {
+      margin-bottom: 0;
+    }
+
+    .form-row {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+      gap: 1rem;
+    }
+
+    .radio-group {
+      display: flex;
+      gap: 1.5rem;
+      padding: 1rem;
+      background: rgba(0, 229, 255, 0.05);
+      border-radius: 12px;
+      margin-top: 0.5rem;
+    }
+
+    body.light-mode .radio-group {
+      background: rgba(0, 100, 200, 0.05);
+    }
+
+    .radio-option {
+      display: flex;
+      align-items: center;
+      cursor: pointer;
+      flex: 1;
+      padding: 0.75rem;
+      border-radius: 8px;
+      transition: all 0.3s ease;
+    }
+
+    .radio-option:hover {
+      background: rgba(0, 229, 255, 0.1);
+    }
+
+    .radio-option input[type="radio"] {
+      width: 18px;
+      height: 18px;
+      margin-right: 0.75rem;
+      cursor: pointer;
+      accent-color: var(--primary-color);
+    }
+
+    .radio-option label {
+      flex: 1;
+      cursor: pointer;
+      font-weight: 500;
+    }
+
+    /* Payment Card Styling */
+    .payment-info-card {
+      background: linear-gradient(135deg, rgba(0, 229, 255, 0.1), rgba(255, 123, 0, 0.05));
+      border: 2px solid rgba(0, 229, 255, 0.3);
+      border-radius: 16px;
+      padding: 2rem;
+      margin: 1.5rem 0;
+      position: relative;
+      overflow: hidden;
+    }
+
+    .payment-info-card::before {
+      content: '';
+      position: absolute;
+      top: -50%;
+      right: -50%;
+      width: 300px;
+      height: 300px;
+      background: radial-gradient(circle, rgba(0, 229, 255, 0.1), transparent);
+      border-radius: 50%;
+    }
+
+    .payment-info-card > * {
+      position: relative;
+      z-index: 1;
+    }
+
+    .payment-icon-badge {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      width: 60px;
+      height: 60px;
+      background: linear-gradient(135deg, var(--primary-color), var(--secondary-color));
+      border-radius: 50%;
+      font-size: 1.8rem;
+      color: white;
+      margin-bottom: 1rem;
+    }
+
+    /* Status Card Enhancements */
+    .status-card {
+      background: linear-gradient(135deg, rgba(10, 14, 26, 0.8), rgba(19, 24, 36, 0.8));
+      border: 1px solid rgba(0, 229, 255, 0.2);
+      border-radius: 16px;
+      padding: 2rem;
+      margin: 1rem 0;
+    }
+
+    body.light-mode .status-card {
+      background: linear-gradient(135deg, rgba(255, 255, 255, 0.95), rgba(245, 247, 250, 0.95));
+    }
+
+    .status-badge {
+      display: inline-flex;
+      align-items: center;
+      gap: 0.5rem;
+      background: rgba(0, 229, 255, 0.15);
+      border: 1px solid rgba(0, 229, 255, 0.4);
+      padding: 0.75rem 1.5rem;
+      border-radius: 50px;
+      font-size: 0.95rem;
+      font-weight: 600;
+      color: var(--primary-color);
+      margin-bottom: 1rem;
+    }
+
+    .status-badge.processing {
+      background: rgba(255, 183, 0, 0.15);
+      border-color: rgba(255, 183, 0, 0.4);
+      color: #ffc107;
+    }
+
+    .status-badge.completed {
+      background: rgba(0, 255, 136, 0.15);
+      border-color: rgba(0, 255, 136, 0.4);
+      color: #00ff88;
+    }
+
+    /* Details Grid */
+    .details-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+      gap: 1.5rem;
+      margin: 1.5rem 0;
+    }
+
+    .detail-item {
+      padding: 1.2rem;
+      background: linear-gradient(135deg, rgba(0, 229, 255, 0.06), rgba(255, 123, 0, 0.03));
+      border-radius: 14px;
+      border-left: 4px solid var(--primary-color);
+      transition: all 0.3s cubic-bezier(0.34, 1.56, 0.64, 1);
+      position: relative;
+      overflow: hidden;
+    }
+
+    .detail-item::before {
+      content: '';
+      position: absolute;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      background: linear-gradient(135deg, rgba(0, 229, 255, 0.1), transparent);
+      opacity: 0;
+      transition: opacity 0.3s;
+    }
+
+    body.light-mode .detail-item {
+      background: rgba(0, 100, 200, 0.05);
+    }
+
+    .detail-item:hover {
+      transform: translateY(-3px) scale(1.02);
+      background: linear-gradient(135deg, rgba(0, 229, 255, 0.1), rgba(255, 123, 0, 0.05));
+      box-shadow: 0 8px 25px rgba(0, 229, 255, 0.15);
+    }
+
+    .detail-label {
+      font-size: 0.85rem;
+      color: rgba(255, 255, 255, 0.6);
+      font-weight: 600;
+      text-transform: uppercase;
+      letter-spacing: 0.5px;
+      margin-bottom: 0.5rem;
+      transition: color 0.3s;
+    }
+
+    .detail-item:hover .detail-label {
+      color: var(--primary-color);
+    }
+
+    body.light-mode .detail-label {
+      color: rgba(0, 0, 0, 0.6);
+    }
+
+    .detail-value {
+      font-size: 1.1rem;
+      font-weight: 700;
+      color: var(--primary-color);
+      word-break: break-all;
+      animation: slideInUp 0.5s ease-out;
+    }
+
+    /* Button Enhancements */
+    .btn-group {
+      display: flex;
+      gap: 1rem;
+      margin-top: 2rem;
+    }
+
+    .btn-group.full {
+      flex-direction: column;
+    }
+
+    .btn-group.full .btn-gradient,
+    .btn-group.full .btn-secondary {
+      width: 100%;
+    }
+
+    .btn-secondary {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      background: rgba(255, 255, 255, 0.1);
+      border: 2px solid rgba(255, 255, 255, 0.2);
+      color: var(--text-color);
+      padding: 12px 28px;
+      border-radius: 50px;
+      font-weight: 600;
+      transition: all 0.3s ease;
+      cursor: pointer;
+    }
+
+    .btn-secondary:hover {
+      background: rgba(255, 255, 255, 0.15);
+      border-color: var(--primary-color);
+      color: var(--primary-color);
+      transform: translateY(-2px);
+    }
+
+    body.light-mode .btn-secondary {
+      background: rgba(0, 0, 0, 0.05);
+      border-color: rgba(0, 0, 0, 0.1);
+      color: var(--light-text);
+    }
+
+    body.light-mode .btn-secondary:hover {
+      background: rgba(0, 0, 0, 0.1);
+      border-color: var(--primary-color);
+      color: var(--primary-color);
     }
 
     /* Enhanced mobile responsiveness */
@@ -686,13 +1219,286 @@
       background: var(--primary-color);
       border-radius: 4px;
     }
+
+    /* Enhanced Form Input States */
+    .form-input {
+      transition: all 0.3s ease;
+    }
+
+    .form-input:focus {
+      border-color: var(--primary-color);
+      outline: none;
+      box-shadow: 0 0 0 4px rgba(0, 229, 255, 0.15);
+      background-color: rgba(255, 255, 255, 0.08);
+    }
+
+    body.light-mode .form-input:focus {
+      box-shadow: 0 0 0 4px rgba(0, 100, 200, 0.15);
+      background-color: rgba(0, 0, 0, 0.05);
+    }
+
+    /* Enhanced Textarea */
+    textarea.form-input {
+      resize: vertical;
+      min-height: 100px;
+    }
+
+    textarea.form-input:focus {
+      border-color: var(--primary-color);
+    }
+
+    /* Form validation feedback */
+    .form-input:invalid:not(:placeholder-shown) {
+      border-color: #ff6b6b;
+    }
+
+    /* Button state transitions */
+    .btn-gradient,
+    .btn-secondary {
+      transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+    }
+
+    .btn-gradient:active {
+      transform: translateY(-1px);
+    }
+
+    .btn-secondary:active {
+      transform: translateY(-1px);
+    }
+
+    /* Progress indicator hover effect */
+    .progress-circle {
+      cursor: default;
+    }
+
+    /* Detail items hover */
+    .detail-item {
+      transition: all 0.3s ease;
+    }
+
+    .detail-item:hover {
+      transform: translateY(-2px);
+      background: rgba(0, 229, 255, 0.1);
+    }
+
+    /* Contact Section Enhancements */
+    @keyframes float-subtle {
+      0%, 100% { transform: translateY(0); }
+      50% { transform: translateY(-8px); }
+    }
+
+    @keyframes glow-pulse {
+      0%, 100% { box-shadow: 0 0 10px rgba(0, 229, 255, 0.3), inset 0 0 10px rgba(0, 229, 255, 0.1); }
+      50% { box-shadow: 0 0 30px rgba(0, 229, 255, 0.5), inset 0 0 20px rgba(0, 229, 255, 0.2); }
+    }
+
+    @keyframes slide-in-left {
+      from {
+        opacity: 0;
+        transform: translateX(-30px);
+      }
+      to {
+        opacity: 1;
+        transform: translateX(0);
+      }
+    }
+
+    @keyframes slide-in-right {
+      from {
+        opacity: 0;
+        transform: translateX(30px);
+      }
+      to {
+        opacity: 1;
+        transform: translateX(0);
+      }
+    }
+
+    /* Support Status Badge */
+    .support-badge {
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      background: linear-gradient(135deg, rgba(0, 255, 136, 0.1), rgba(0, 229, 255, 0.1));
+      border: 1px solid rgba(0, 255, 136, 0.3);
+      padding: 8px 16px;
+      border-radius: 50px;
+      animation: glow-pulse 2s ease-in-out infinite;
+    }
+
+    .support-pulse {
+      width: 8px;
+      height: 8px;
+      border-radius: 50%;
+      background: #00ff88;
+      animation: pulse 2s ease-in-out infinite;
+    }
+
+    /* Contact Card Styles */
+    .contact-card {
+      position: relative;
+      overflow: hidden;
+      transition: all 0.3s cubic-bezier(0.34, 1.56, 0.64, 1);
+    }
+
+    .contact-card:hover {
+      transform: translateY(-8px);
+    }
+
+    .contact-card::before {
+      content: '';
+      position: absolute;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      background: radial-gradient(circle 600px at top right, rgba(0, 229, 255, 0.1), transparent 80%);
+      opacity: 0;
+      transition: opacity 0.5s;
+      pointer-events: none;
+    }
+
+    .contact-card:hover::before {
+      opacity: 1;
+    }
+
+    .contact-card-icon {
+      transition: all 0.3s cubic-bezier(0.34, 1.56, 0.64, 1);
+      display: inline-block;
+    }
+
+    .contact-card:hover .contact-card-icon {
+      transform: scale(1.2) rotateZ(10deg);
+    }
+
+    .contact-status-badge {
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      padding: 6px 12px;
+      border-radius: 50px;
+      font-size: 0.75rem;
+      font-weight: 600;
+      border: 1px solid currentColor;
+      opacity: 0.7;
+      animation: slideInUp 0.6s ease-out 0.3s both;
+    }
+
+    .contact-status-badge.active {
+      background: rgba(0, 255, 136, 0.15);
+      border-color: rgba(0, 255, 136, 0.3);
+      color: #00ff88;
+    }
+
+    .contact-status-badge.available {
+      background: rgba(255, 183, 0, 0.15);
+      border-color: rgba(255, 183, 0, 0.3);
+      color: #ffc107;
+    }
+
+    .contact-status-pulse {
+      width: 6px;
+      height: 6px;
+      border-radius: 50%;
+      animation: pulse 2s ease-in-out infinite;
+    }
+
+    .contact-status-pulse.active {
+      background: #00ff88;
+    }
+
+    .contact-status-pulse.available {
+      background: #ffc107;
+    }
+
+    /* Support Topic Cards */
+    .support-topic-card {
+      transition: all 0.3s cubic-bezier(0.34, 1.56, 0.64, 1);
+      cursor: pointer;
+    }
+
+    .support-topic-card:hover {
+      transform: scale(1.08) translateY(-5px);
+      box-shadow: 0 15px 40px rgba(0, 229, 255, 0.2);
+    }
+
+    .support-topic-card:hover .topic-icon {
+      animation: float-subtle 2s ease-in-out infinite;
+    }
+
+    .topic-icon {
+      transition: all 0.3s;
+      display: inline-block;
+    }
+
+    /* Quick Response CTA */
+    .cta-card {
+      animation: fadeInScale 0.8s ease-out;
+    }
+
+    .cta-card:hover {
+      transform: scale(1.02);
+    }
+
+    /* Contact Section List Items */
+    .contact-list-item {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      font-size: 0.875rem;
+      color: var(--text-color);
+      animation: slideInLeft 0.6s ease-out;
+    }
+
+    .contact-list-item i {
+      color: #00ff88;
+      flex-shrink: 0;
+    }
+
+    .contact-list-item:nth-child(2) {
+      animation-delay: 0.1s;
+    }
+
+    .contact-list-item:nth-child(3) {
+      animation-delay: 0.2s;
+    }
+
+    /* Accordion Enhancement */
+    .contact-accordion-header {
+      cursor: pointer;
+      padding: 16px;
+      background: linear-gradient(135deg, rgba(0, 229, 255, 0.05), rgba(255, 123, 0, 0.03));
+      border-radius: 10px;
+      transition: all 0.3s;
+      font-weight: 500;
+      border-left: 4px solid transparent;
+    }
+
+    .contact-accordion-header:hover {
+      background: linear-gradient(135deg, rgba(0, 229, 255, 0.1), rgba(255, 123, 0, 0.08));
+      border-left-color: var(--primary-color);
+      transform: translateX(4px);
+    }
+
+    .contact-accordion-icon {
+      transition: transform 0.3s cubic-bezier(0.34, 1.56, 0.64, 1);
+      display: inline-block;
+    }
+
+    .contact-accordion-header.active .contact-accordion-icon {
+      transform: rotate(180deg) scale(1.2);
+    }
   </style>
 </head>
 <body>
   
-  <i class="fas fa-shield-alt floating-icon icon-1"></i>
-  <i class="fas fa-lock floating-icon icon-2"></i>
-  <i class="fas fa-handshake floating-icon icon-3"></i>
+  <!-- Animated Crypto Background Icons -->
+  <i class="fas fa-shield-alt floating-icon icon-1" style="animation: float 6s ease-in-out infinite;"></i>
+  <i class="fas fa-lock floating-icon icon-2" style="animation: float 8s ease-in-out infinite reverse;"></i>
+  <i class="fas fa-handshake floating-icon icon-3" style="animation: float 7s ease-in-out infinite;"></i>
+  <i class="fab fa-bitcoin floating-icon" style="top: 25%; right: 10%; animation: float 9s ease-in-out infinite; opacity: 0.03; color: #f7931a;"></i>
+  <i class="fab fa-ethereum floating-icon" style="top: 70%; left: 8%; animation: float 10s ease-in-out infinite reverse; opacity: 0.03; color: #627eea;"></i>
+  <i class="fas fa-coins floating-icon" style="top: 40%; right: 5%; animation: float 8s ease-in-out infinite; opacity: 0.03; color: #ff6600;"></i>
 
   <nav class="sticky top-0 z-50 shadow-lg">
     <div class="container mx-auto px-4 py-3 flex flex-wrap justify-between items-center">
@@ -758,7 +1564,7 @@
             <i class="fas fa-chart-line text-4xl icon-secondary"></i>
             <div>
               <h3 class="text-xl font-semibold mb-2">Amount Handled</h3>
-              <p class="text-4xl font-bold icon-secondary mb-2">$120k+</p>
+              <p class="text-4xl font-bold icon-secondary mb-2">$250k+</p>
               <p class="text-gray-400">In secure transactions</p>
             </div>
           </div>
@@ -946,150 +1752,286 @@
 
     <!-- Order Section -->
     <section id="order" class="section py-8">
-      <h2 class="text-3xl font-bold mb-8 text-center">Place an Escrow Order</h2>
+      <h2 class="text-4xl md:text-5xl font-bold mb-4 text-center">Place an Escrow Order</h2>
+      <p class="text-center text-gray-300 mb-8">Secure your transaction in 3 simple steps</p>
 
       <div id="order-form-page" class="order-step active">
+        <!-- Progress Indicator -->
+        <div class="progress-container mb-12">
+          <div class="progress-step active">
+            <div class="progress-circle"><i class="fas fa-list"></i></div>
+            <div class="progress-label">Details</div>
+          </div>
+          <div class="progress-step">
+            <div class="progress-circle"><i class="fas fa-wallet"></i></div>
+            <div class="progress-label">Payment</div>
+          </div>
+          <div class="progress-step">
+            <div class="progress-circle"><i class="fas fa-check"></i></div>
+            <div class="progress-label">Status</div>
+          </div>
+        </div>
+
         <div class="card max-w-2xl mx-auto">
-          <form id="escrow-form" class="space-y-4">
-            <div class="mb-4">
-              <label class="form-label">Your Role</label>
-              <div class="flex gap-4 mt-2">
-                <label class="flex items-center cursor-pointer">
-                  <input type="radio" name="role" value="buyer" checked class="mr-2" />
-                  <span>Buyer</span>
+          <div class="mb-6">
+            <div class="flex items-center gap-3 mb-2">
+              <i class="fas fa-info-circle text-2xl icon-primary"></i>
+              <h3 class="text-2xl font-bold">Transaction Details</h3>
+            </div>
+            <p class="text-gray-400">Start by providing your transaction information</p>
+          </div>
+
+          <form id="escrow-form" class="space-y-6">
+            <div class="form-group">
+              <label class="form-label block mb-3">Your Role</label>
+              <div class="radio-group">
+                <label class="radio-option flex-1">
+                  <input type="radio" name="role" value="buyer" checked />
+                  <span><i class="fas fa-shopping-cart mr-2"></i>Buyer</span>
                 </label>
-                <label class="flex items-center cursor-pointer">
-                  <input type="radio" name="role" value="vendor" class="mr-2" />
-                  <span>Vendor</span>
+                <label class="radio-option flex-1">
+                  <input type="radio" name="role" value="vendor" />
+                  <span><i class="fas fa-store mr-2"></i>Vendor</span>
                 </label>
               </div>
             </div>
 
-            <div class="mb-4">
-              <label for="counterparty-contact" class="form-label">Counterparty Contact (Email or Telegram handle)</label>
-              <input type="text" id="counterparty-contact" class="form-input" required placeholder="Enter email or Telegram handle" />
+            <div class="form-group">
+              <label for="counterparty-contact" class="form-label flex items-center gap-2">
+                <i class="fas fa-user-tie"></i> Counterparty Contact
+              </label>
+              <input type="text" id="counterparty-contact" class="form-input" required placeholder="Email or Telegram handle (e.g., @username)" />
+              <p class="text-xs text-gray-400 mt-2">The person you're transacting with</p>
             </div>
 
-            <div class="mb-4">
-              <label for="transaction-description" class="form-label">Transaction Description</label>
-              <textarea id="transaction-description" rows="3" class="form-input" required placeholder="Describe the goods or services being exchanged"></textarea>
+            <div class="form-group">
+              <label for="transaction-description" class="form-label flex items-center gap-2">
+                <i class="fas fa-align-left"></i> Transaction Description
+              </label>
+              <textarea id="transaction-description" rows="3" class="form-input" required placeholder="Describe the goods or services being exchanged (e.g., GPU, mining contract, digital product)"></textarea>
+              <p class="text-xs text-gray-400 mt-2">Be specific about what's being exchanged</p>
             </div>
 
-             <div class="mb-4">
-              <label for="shipping-address" class="form-label">Your Email/Shipping Address</label>
-              <textarea id="shipping-address" rows="3" class="form-input" required placeholder="Enter your contact details or shipping address"></textarea>
+            <div class="form-group">
+              <label for="shipping-address" class="form-label flex items-center gap-2">
+                <i class="fas fa-map-marker-alt"></i> Your Contact/Shipping Address
+              </label>
+              <textarea id="shipping-address" rows="3" class="form-input" required placeholder="Your email address and/or physical shipping address"></textarea>
+              <p class="text-xs text-gray-400 mt-2">Where should delivery be sent or where should support contact you</p>
             </div>
 
-            <div class="mb-4">
-              <label for="transaction-amount" class="form-label">Amount (in Bitcoin)</label>
-              <input
-                type="number"
-                step="0.00000001"
-                min="0.0001"
-                id="transaction-amount"
-                class="form-input"
-                required
-                placeholder="0.00000000"
-              />
-              <p class="text-xs text-gray-400 mt-1">Minimum amount: 0.0001 BTC</p>
+            <div class="form-group">
+              <label for="transaction-amount" class="form-label flex items-center gap-2">
+                <i class="fas fa-bitcoin mr-1" style="color: #f7931a;"></i> Transaction Amount (BTC)
+              </label>
+              <div class="relative">
+                <input
+                  type="number"
+                  step="0.00000001"
+                  min="0.0001"
+                  id="transaction-amount"
+                  class="form-input text-lg font-semibold"
+                  required
+                  placeholder="0.00000000"
+                />
+              </div>
+              <p class="text-xs text-gray-400 mt-2">Minimum: 0.0001 BTC • Include the 5% escrow fee in this amount</p>
             </div>
 
-            <button type="submit" id="order-next-btn" class="btn-gradient w-full">
-              <i class="fas fa-arrow-right"></i> Next
+            <div class="bg-blue-900 bg-opacity-20 border border-blue-800 rounded-lg p-4 mt-6">
+              <div class="flex gap-3">
+                <i class="fas fa-lightbulb text-blue-400 flex-shrink-0 mt-1"></i>
+                <div class="text-sm text-gray-300">
+                  <p class="font-semibold text-blue-400 mb-1">Pro Tip:</p>
+                  <p>Provide clear transaction details to ensure smooth processing. Our 5% fee covers secure holding and verification.</p>
+                </div>
+              </div>
+            </div>
+
+            <button type="submit" id="order-next-btn" class="btn-gradient w-full mt-8">
+              <i class="fas fa-arrow-right"></i> Continue to Payment
             </button>
           </form>
         </div>
       </div>
 
       <div id="order-payment-page" class="order-step hidden">
+        <!-- Progress Update -->
+        <div class="progress-container mb-12">
+          <div class="progress-step completed">
+            <div class="progress-circle"><i class="fas fa-check"></i></div>
+            <div class="progress-label">Details</div>
+          </div>
+          <div class="progress-step active">
+            <div class="progress-circle"><i class="fas fa-wallet"></i></div>
+            <div class="progress-label">Payment</div>
+          </div>
+          <div class="progress-step">
+            <div class="progress-circle"><i class="fas fa-check"></i></div>
+            <div class="progress-label">Status</div>
+          </div>
+        </div>
+
         <div class="card max-w-2xl mx-auto">
-          <div class="text-center mb-6">
-            <i class="fas fa-wallet text-5xl icon-primary mb-4"></i>
-            <h3 class="text-xl font-semibold mb-4">Make Your Payment</h3>
-          </div>
-          
-          <p class="mb-4 text-gray-300">Please send the exact Bitcoin amount to the following wallet address:</p>
-
-          <div class="wallet-address mb-4 text-center">
-            bc1qvrfgyfkcjm7us5azz8ag6qzdq9pzy5wsjf2e7r
-            <button type="button" id="copy-wallet-btn" class="ml-2 icon-primary">
-              <i class="fas fa-copy"></i>
-            </button>
+          <div class="payment-info-card">
+            <div class="payment-icon-badge">
+              <i class="fas fa-coins"></i>
+            </div>
+            <h3 class="text-2xl font-bold mb-2">Send Your Payment</h3>
+            <p class="text-gray-300">Send Bitcoin to complete your escrow deposit</p>
           </div>
 
-          <div class="bg-blue-900 bg-opacity-20 border border-blue-800 rounded-lg p-4 mb-6 text-sm">
-            <div class="flex items-start">
-              <div class="text-blue-400 mr-3">
-                <i class="fas fa-info-circle text-xl"></i>
+          <div class="status-card">
+            <h4 class="font-semibold mb-4 flex items-center gap-2">
+              <i class="fas fa-map-pin icon-primary"></i> Bitcoin Wallet Address
+            </h4>
+            <div class="bg-black bg-opacity-40 p-4 rounded-lg border border-gray-700 mb-4">
+              <div class="wallet-address text-center font-mono text-sm mb-3">
+                bc1qvrfgyfkcjm7us5azz8ag6qzdq9pzy5wsjf2e7r
               </div>
-              <div>
-                <p class="font-semibold text-blue-400 mb-1">Payment Instructions</p>
-                <ul class="text-gray-300 space-y-1 list-disc pl-4">
-                  <li>Send the exact amount specified in your order</li>
-                  <li>Transaction typically takes 10-30 minutes to confirm</li>
-                  <li>Include your transaction ID in the memo if possible</li>
+              <button type="button" id="copy-wallet-btn" class="btn-secondary w-full">
+                <i class="fas fa-copy mr-2"></i> Copy Address
+              </button>
+            </div>
+          </div>
+
+          <div class="details-grid">
+            <div class="detail-item">
+              <div class="detail-label">Confirmation Time</div>
+              <div class="detail-value text-lg">10-30 min</div>
+            </div>
+            <div class="detail-item">
+              <div class="detail-label">Network</div>
+              <div class="detail-value">Bitcoin</div>
+            </div>
+          </div>
+
+          <div class="bg-amber-900 bg-opacity-20 border border-amber-800 rounded-lg p-4 mb-6">
+            <div class="flex gap-3">
+              <i class="fas fa-exclamation-triangle text-amber-400 flex-shrink-0 mt-0.5"></i>
+              <div class="text-sm text-gray-300">
+                <p class="font-semibold text-amber-400 mb-2">Important Instructions</p>
+                <ul class="space-y-2 list-disc pl-5">
+                  <li>Send <strong>exactly</strong> the amount shown in your order</li>
+                  <li>Sending from a verified wallet is recommended</li>
+                  <li>Network confirmation typically takes 10-30 minutes</li>
+                  <li>Once received, we'll hold funds securely in escrow</li>
                 </ul>
               </div>
             </div>
           </div>
 
-          <p class="text-sm text-gray-400 mb-6">Once you've sent the payment, click "Proceed" to continue.</p>
-
-          <button type="button" id="order-proceed-btn" class="btn-gradient w-full mb-4">
-            <i class="fas fa-check"></i> Proceed
-          </button>
-          
-          <button type="button" id="order-back-btn" class="bg-gray-700 hover:bg-gray-600 text-white font-semibold py-3 px-6 rounded-full transition w-full">
-            <i class="fas fa-arrow-left"></i> Go Back
-          </button>
-        </div>
-      </div>
-
-      <div id="order-status-page" class="order-step hidden">
-        <div class="card max-w-2xl mx-auto">
-          <div class="text-center mb-6">
-            <i class="fas fa-clock text-5xl icon-secondary mb-4"></i>
-            <h3 class="text-xl font-semibold mb-2">Transaction Status</h3>
-            <div class="flex items-center justify-center">
-              <div class="status-indicator status-pending mr-3"></div>
-              <span class="text-lg" id="status-text">Pending</span>
-            </div>
-          </div>
-
-          <div class="bg-gray-800 p-4 rounded-lg mb-6">
-            <h4 class="font-semibold mb-4 text-center">Transaction Details</h4>
-            <div class="grid grid-cols-1 md:grid-cols-2 gap-y-2 text-sm text-gray-300">
-              <div>Role:</div>
-              <div id="status-role" class="font-medium">Buyer</div>
-
-              <div>Counterparty:</div>
-              <div id="status-counterparty" class="font-medium">-</div>
-
-              <div>Amount:</div>
-              <div id="status-amount" class="font-medium">-</div>
-
-              <div>Description:</div>
-              <div id="status-description" class="font-medium">-</div>
-
-              <div>Escrow ID:</div>
-              <div class="font-mono font-medium">ES-<span id="status-id">25791364</span></div>
-            </div>
-          </div>
-          
           <div class="bg-blue-900 bg-opacity-20 border border-blue-800 rounded-lg p-4 mb-6">
-            <div class="flex items-center">
-              <div class="text-blue-400 mr-3">
-                <i class="fas fa-envelope"></i>
-              </div>
+            <div class="flex gap-3">
+              <i class="fas fa-info-circle text-blue-400 flex-shrink-0 mt-0.5"></i>
               <p class="text-sm text-gray-300">
-                Your transaction is being processed. You will receive updates via email once the status changes.
+                After you send payment, click "I've Sent Payment" to proceed. We'll monitor the blockchain and confirm receipt automatically.
               </p>
             </div>
           </div>
 
-          <a href="javascript:void(0)" id="order-start-over" class="icon-primary hover:underline flex items-center justify-center">
-            <i class="fas fa-redo mr-2"></i> Start Over
-          </a>
+          <div class="btn-group full">
+            <button type="button" id="order-proceed-btn" class="btn-gradient">
+              <i class="fas fa-check-circle mr-2"></i> I've Sent Payment
+            </button>
+            <button type="button" id="order-back-btn" class="btn-secondary">
+              <i class="fas fa-arrow-left mr-2"></i> Back to Details
+            </button>
+          </div>
+        </div>
+      </div>
+
+      <div id="order-status-page" class="order-step hidden">
+        <!-- Progress Update -->
+        <div class="progress-container mb-12">
+          <div class="progress-step completed">
+            <div class="progress-circle"><i class="fas fa-check"></i></div>
+            <div class="progress-label">Details</div>
+          </div>
+          <div class="progress-step completed">
+            <div class="progress-circle"><i class="fas fa-check"></i></div>
+            <div class="progress-label">Payment</div>
+          </div>
+          <div class="progress-step active">
+            <div class="progress-circle"><i class="fas fa-clock"></i></div>
+            <div class="progress-label">Status</div>
+          </div>
+        </div>
+
+        <div class="card max-w-2xl mx-auto">
+          <div class="text-center mb-8">
+            <div class="mb-4">
+              <i class="fas fa-hourglass-end text-6xl icon-secondary mb-4" style="animation: pulse 2s infinite;"></i>
+            </div>
+            <h3 class="text-3xl font-bold mb-2">Processing Your Escrow</h3>
+            <div class="flex items-center justify-center gap-3">
+              <div class="status-indicator status-pending"></div>
+              <span class="text-lg font-semibold" id="status-text">Pending Confirmation</span>
+            </div>
+          </div>
+
+          <div class="status-badge processing">
+            <i class="fas fa-spinner fa-spin"></i>
+            Awaiting blockchain confirmation
+          </div>
+
+          <div class="bg-gradient-to-r from-gray-800 to-gray-900 p-6 rounded-lg mb-6 border border-gray-700">
+            <h4 class="font-bold mb-6 text-center text-lg">Your Escrow Details</h4>
+            <div class="details-grid">
+              <div class="detail-item">
+                <div class="detail-label">Role</div>
+                <div class="detail-value" id="status-role">Buyer</div>
+              </div>
+              <div class="detail-item">
+                <div class="detail-label">Amount</div>
+                <div class="detail-value" id="status-amount">-</div>
+              </div>
+              <div class="detail-item">
+                <div class="detail-label">Counterparty</div>
+                <div class="detail-value text-sm font-mono" id="status-counterparty">-</div>
+              </div>
+              <div class="detail-item">
+                <div class="detail-label">Escrow ID</div>
+                <div class="detail-value text-sm font-mono">ES-<span id="status-id">25791364</span></div>
+              </div>
+            </div>
+          </div>
+
+          <div class="bg-gray-800 bg-opacity-50 p-6 rounded-lg mb-6 border border-gray-700">
+            <h4 class="font-semibold mb-4 flex items-center gap-2">
+              <i class="fas fa-align-left"></i> Transaction Summary
+            </h4>
+            <p class="text-gray-300 line-clamp-3" id="status-description">-</p>
+          </div>
+          
+          <div class="bg-blue-900 bg-opacity-30 border border-blue-700 rounded-lg p-4 mb-6">
+            <div class="flex gap-3">
+              <i class="fas fa-bell text-blue-400 flex-shrink-0 mt-0.5"></i>
+              <div class="text-sm text-gray-300">
+                <p class="font-semibold text-blue-300 mb-1">What Happens Next?</p>
+                <ul class="space-y-1 text-xs">
+                  <li>• We'll confirm blockchain receipt of your payment</li>
+                  <li>• Your counterparty will be notified</li>
+                  <li>• You'll receive email updates at each stage</li>
+                  <li>• Contact support if you have questions</li>
+                </ul>
+              </div>
+            </div>
+          </div>
+
+          <div class="bg-gradient-to-r from-amber-900/20 to-orange-900/20 border border-amber-700 rounded-lg p-4 mb-6">
+            <div class="flex gap-3">
+              <i class="fas fa-info-circle text-amber-400 flex-shrink-0 mt-0.5"></i>
+              <div class="text-sm text-gray-300">
+                <p class="font-semibold text-amber-300 mb-1">Track Your Transaction</p>
+                <p>Use your Escrow ID above to track progress. We monitor everything 24/7. Visit our support if you need assistance.</p>
+              </div>
+            </div>
+          </div>
+
+          <button type="button" id="order-start-over" class="btn-gradient w-full">
+            <i class="fas fa-plus-circle mr-2"></i> Create New Escrow
+          </button>
         </div>
       </div>
     </section>
@@ -1351,27 +2293,142 @@
 
     <!-- Contact Us Section -->
     <section id="contact" class="section py-8">
-      <h2 class="text-3xl font-bold mb-8 text-center">Contact Us</h2>
-
-      <div class="card max-w-4xl mx-auto">
-        <div class="grid grid-cols-1 md:grid-cols-2 gap-8">
-          <div class="flex flex-col items-center justify-center text-center p-6 rounded-lg bg-gradient-to-br from-blue-900/30 to-transparent">
-            <div class="text-5xl icon-primary mb-4">
-              <i class="fab fa-telegram"></i>
-            </div>
-            <h3 class="text-xl font-semibold mb-2">Telegram Bot</h3>
-            <p class="text-gray-300 mb-4">Get instant support through our Telegram bot</p>
-            <a href="https://t.me/Escrowservice101_bot" target="_blank" class="btn-gradient"> @Escrowservice101_bot </a>
-          </div>
-          <div class="flex flex-col items-center justify-center text-center p-6 rounded-lg bg-gradient-to-br from-amber-900/30 to-transparent">
-            <div class="text-5xl icon-primary mb-4">
-              <i class="fas fa-envelope"></i>
-            </div>
-            <h3 class="text-xl font-semibold mb-2">Email Support</h3>
-            <p class="text-gray-300 mb-4">Send us an email for any inquiries</p>
-            <a href="mailto:swiftescrow@keemail.me" class="btn-gradient"> swiftescrow@keemail.me </a>
+      <div class="max-w-6xl mx-auto">
+        <!-- Header -->
+        <div class="text-center mb-12">
+          <h2 class="text-4xl md:text-5xl font-bold mb-3" style="background: linear-gradient(135deg, var(--primary-color), var(--secondary-color)); -webkit-background-clip: text; -webkit-text-fill-color: transparent; background-clip: text;">Customer Care Assistance</h2>
+          <p class="text-lg text-gray-300 mb-4">We're here to help you 24/7 with any questions or concerns</p>
+          <div class="flex justify-center gap-2 mb-6">
+            <span class="inline-flex items-center gap-2 bg-gradient-to-r from-green-500/20 to-emerald-500/20 border border-green-500/30 rounded-full px-4 py-2">
+              <span class="w-2 h-2 bg-green-500 rounded-full animate-pulse"></span>
+              <span class="text-sm font-semibold text-green-400">24/7 Live Support</span>
+            </span>
           </div>
         </div>
+
+        <!-- Support Quality Metrics -->
+        <div class="grid grid-cols-1 md:grid-cols-3 gap-4 mb-12">
+          <div class="card text-center">
+            <div class="text-4xl icon-primary mb-3"><i class="fas fa-clock"></i></div>
+            <div class="text-sm text-gray-400 mb-1">Average Response</div>
+            <div class="text-2xl font-bold">5 Minutes</div>
+          </div>
+          <div class="card text-center">
+            <div class="text-4xl icon-secondary mb-3"><i class="fas fa-smile"></i></div>
+            <div class="text-sm text-gray-400 mb-1">Customer Satisfaction</div>
+            <div class="text-2xl font-bold">98%</div>
+          </div>
+          <div class="card text-center">
+            <div class="text-4xl" style="color: #00ff88;" ><i class="fas fa-check-circle"></i></div>
+            <div class="text-sm text-gray-400 mb-1">Issues Resolved</div>
+            <div class="text-2xl font-bold">245</div>
+          </div>
+        </div>
+
+        <!-- Contact Channels -->
+        <div class="grid grid-cols-1 md:grid-cols-2 gap-6 mb-12">
+          <!-- Telegram Support -->
+          <div class="card relative overflow-hidden group">
+            <div class="absolute top-0 left-0 w-full h-1 bg-gradient-to-r from-blue-500 to-cyan-500"></div>
+            <div class="absolute -top-20 -right-20 w-40 h-40 bg-gradient-to-br from-blue-500/20 to-transparent rounded-full opacity-0 group-hover:opacity-100 transition-opacity duration-500"></div>
+            
+            <div class="relative z-10">
+              <div class="flex items-start justify-between mb-6">
+                <div class="text-6xl text-blue-400"><i class="fab fa-telegram"></i></div>
+                <span class="inline-flex items-center gap-1.5 bg-blue-500/20 border border-blue-500/30 rounded-full px-3 py-1">
+                  <span class="w-2 h-2 bg-blue-500 rounded-full animate-pulse"></span>
+                  <span class="text-xs font-semibold text-blue-300">Active</span>
+                </span>
+              </div>
+              <h3 class="text-2xl font-bold mb-2">Telegram Support</h3>
+              <p class="text-gray-300 mb-2">Instant messaging support with quick responses</p>
+              <div class="space-y-2 mb-6 text-sm text-gray-400">
+                <div class="flex items-center gap-2"><i class="fas fa-check text-green-400"></i> Fastest response time</div>
+                <div class="flex items-center gap-2"><i class="fas fa-check text-green-400"></i> Real-time assistance</div>
+                <div class="flex items-center gap-2"><i class="fas fa-check text-green-400"></i> Transaction tracking</div>
+              </div>
+              <a href="https://t.me/Escrowservice101_bot" target="_blank" class="btn-gradient w-full block text-center">
+                <i class="fab fa-telegram"></i> Open @Escrowservice101_bot
+              </a>
+            </div>
+          </div>
+
+          <!-- Email Support -->
+          <div class="card relative overflow-hidden group">
+            <div class="absolute top-0 left-0 w-full h-1 bg-gradient-to-r from-amber-500 to-orange-500"></div>
+            <div class="absolute -top-20 -right-20 w-40 h-40 bg-gradient-to-br from-amber-500/20 to-transparent rounded-full opacity-0 group-hover:opacity-100 transition-opacity duration-500"></div>
+            
+            <div class="relative z-10">
+              <div class="flex items-start justify-between mb-6">
+                <div class="text-6xl text-amber-400"><i class="fas fa-envelope"></i></div>
+                <span class="inline-flex items-center gap-1.5 bg-amber-500/20 border border-amber-500/30 rounded-full px-3 py-1">
+                  <span class="w-2 h-2 bg-amber-500 rounded-full animate-pulse"></span>
+                  <span class="text-xs font-semibold text-amber-300">Available</span>
+                </span>
+              </div>
+              <h3 class="text-2xl font-bold mb-2">Email Support</h3>
+              <p class="text-gray-300 mb-2">Detailed inquiry support with thorough responses</p>
+              <div class="space-y-2 mb-6 text-sm text-gray-400">
+                <div class="flex items-center gap-2"><i class="fas fa-check text-green-400"></i> 30-minute turnaround</div>
+                <div class="flex items-center gap-2"><i class="fas fa-check text-green-400"></i> Detailed solutions</div>
+                <div class="flex items-center gap-2"><i class="fas fa-check text-green-400"></i> Documentation included</div>
+              </div>
+              <div class="bg-gradient-to-r from-amber-500/10 to-orange-500/10 border border-amber-500/30 rounded-lg p-4 mb-6">
+                <p class="text-sm text-gray-300 mb-2">Contact Email:</p>
+                <p class="text-lg font-bold text-amber-300 break-all">swiftescrow@keemail.me</p>
+              </div>
+              <a href="mailto:swiftescrow@keemail.me" class="btn-gradient w-full block text-center">
+                <i class="fas fa-envelope"></i> Send Email Now
+              </a>
+            </div>
+          </div>
+        </div>
+
+        <!-- Support Categories -->
+        <div class="mb-12">
+          <h3 class="text-2xl font-bold mb-6 text-center">Common Support Topics</h3>
+          <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4">
+            <div class="card p-6 text-center hover:scale-105 transition-transform">
+              <div class="text-4xl icon-primary mb-3"><i class="fas fa-question-circle"></i></div>
+              <h4 class="font-semibold mb-2">Getting Started</h4>
+              <p class="text-sm text-gray-400">Learn how to begin with escrow or swap services</p>
+            </div>
+            <div class="card p-6 text-center hover:scale-105 transition-transform">
+              <div class="text-4xl icon-secondary mb-3"><i class="fas fa-lock"></i></div>
+              <h4 class="font-semibold mb-2">Security</h4>
+              <p class="text-sm text-gray-400">Questions about safety and data protection</p>
+            </div>
+            <div class="card p-6 text-center hover:scale-105 transition-transform">
+              <div class="text-4xl mb-3" style="color: #00ff88;"><i class="fas fa-wallet"></i></div>
+              <h4 class="font-semibold mb-2">Transactions</h4>
+              <p class="text-sm text-gray-400">Help with escrow and swap processes</p>
+            </div>
+            <div class="card p-6 text-center hover:scale-105 transition-transform">
+              <div class="text-4xl" style="color: #ff7b00;" ><i class="fas fa-headset"></i></div>
+              <h4 class="font-semibold mb-2">Technical Support</h4>
+              <p class="text-sm text-gray-400">Resolve technical issues and errors</p>
+            </div>
+          </div>
+        </div>
+
+        <!-- Quick Response CTA -->
+        <div class="card mb-12 bg-gradient-to-br from-cyan-900/30 to-blue-900/30 border-2 border-cyan-500/30 relative overflow-hidden">
+          <div class="absolute -top-32 -right-32 w-96 h-96 bg-gradient-to-br from-cyan-500/10 to-transparent rounded-full"></div>
+          <div class="relative z-10 text-center py-8 px-6">
+            <h3 class="text-2xl font-bold mb-3">Need Immediate Help?</h3>
+            <p class="text-gray-300 mb-3 max-w-xl mx-auto">Connect with our support team instantly. We typically respond within 30 minutes to all email inquiries.</p>
+            <div class="mb-6 p-4 bg-cyan-500/10 border border-cyan-500/20 rounded-lg inline-block">
+              <p class="text-sm text-gray-300 mb-2">Email:</p>
+              <p class="text-lg font-bold text-cyan-300 break-all">swiftescrow@keemail.me</p>
+            </div>
+            <a href="mailto:swiftescrow@keemail.me" class="btn-gradient inline-block">
+              <i class="fas fa-envelope"></i> Contact Support Team
+            </a>
+          </div>
+        </div>
+
+        <!-- Main card with accordion -->
+        <div class="card">
         <div class="mt-8 pt-8 border-t border-gray-700">
           <h3 class="text-xl font-semibold mb-4 text-center">Frequently Asked Questions</h3>
           <div class="accordion">
@@ -1904,6 +2961,16 @@
 $(document).ready(function () {
 
   // ───────────────────────────────────────────────
+  // SMOOTH PAGE LOAD ANIMATIONS
+  // ───────────────────────────────────────────────
+  $('body').css('opacity', '0').animate({'opacity': '1'}, 800);
+  $('.card').each(function(index) {
+    $(this).css({'opacity': '0', 'transform': 'translateY(20px)'}).delay(index * 100).animate({'opacity': '1'}, 600, function() {
+      $(this).css('transform', 'translateY(0)');
+    });
+  });
+
+  // ───────────────────────────────────────────────
   // REAL-TIME PRICES FROM COINGECKO
   // ───────────────────────────────────────────────
   let cryptoPrices = {
@@ -1949,7 +3016,18 @@ $(document).ready(function () {
   }
 
   // ───────────────────────────────────────────────
-  // YOUR ORIGINAL LOGIC BELOW (UNCHANGED)
+  // ANIMATED PRICE TICKER
+  // ───────────────────────────────────────────────
+  $('.coin-option').each(function() {
+    $(this).on('mouseenter', function() {
+      $(this).find('.coin-icon-large').addClass('animated-pulse');
+    }).on('mouseleave', function() {
+      $(this).find('.coin-icon-large').removeClass('animated-pulse');
+    });
+  });
+
+  // ───────────────────────────────────────────────
+  // YOUR ORIGINAL LOGIC BELOW (ENHANCED)
   // ───────────────────────────────────────────────
 
   let selectedCoin = 'BTC';
@@ -2004,17 +3082,21 @@ $(document).ready(function () {
   // Initialize
   updatePriceDisplay();
 
-  // Coin selection
+  // Coin selection with enhanced animations
   $('#send-coin-selector .coin-option').on('click', function() {
     $('#send-coin-selector .coin-option').removeClass('selected');
-    $(this).addClass('selected');
+    $(this).addClass('selected').css({'animation': 'bounce-in 0.4s ease-out'});
     selectedCoin = $(this).data('coin');
     updateExchangeRate();
     calculateConversion();
   });
 
-  // Amount input
-  $('#send-amount').on('input', calculateConversion);
+  // Amount input with live feedback
+  $('#send-amount').on('input', function() {
+    calculateConversion();
+    $(this).css('box-shadow', '0 0 20px rgba(0, 229, 255, 0.3)');
+    setTimeout(() => $(this).css('box-shadow', ''), 500);
+  });
 
   // Start live price updates
   fetchLivePrices();
@@ -2025,7 +3107,7 @@ $(document).ready(function () {
     $('.nav-links').toggleClass('active');
   });
 
-  // Calculate & Continue button
+  // Calculate & Continue button with confirmation
   $('#swap-calculate-btn').on('click', function() {
     const sendAmount = parseFloat($('#send-amount').val());
     const xmrAddress = $('#xmr-address').val().trim();
@@ -2055,24 +3137,24 @@ $(document).ready(function () {
     $('#preview-tx-id').text(txId);
 
     $('.swap-step').removeClass('active').addClass('hidden');
-    $('#swap-deposit-page').removeClass('hidden').addClass('active');
+    $('#swap-deposit-page').removeClass('hidden').addClass('active').css({'animation': 'slideInUp 0.5s ease-out'});
   });
 
-  // Copy deposit address
+  // Copy deposit address with animation feedback
   $('#copy-deposit-btn').on('click', function() {
     const address = $('#deposit-address').text();
     navigator.clipboard.writeText(address).then(function() {
       const btn = $('#copy-deposit-btn');
       const originalHtml = btn.html();
-      btn.html('<i class="fas fa-check"></i> Copied!');
-      setTimeout(() => btn.html(originalHtml), 2000);
+      btn.html('<i class="fas fa-check"></i> Copied!').css({'background': 'rgba(0, 255, 136, 0.15)', 'border-color': '#00ff88'});
+      setTimeout(() => btn.html(originalHtml).css({'background': '', 'border-color': ''}), 2000);
     });
   });
 
-  // Back button
+  // Back button with animation
   $('#swap-back-btn').on('click', function() {
     $('.swap-step').removeClass('active').addClass('hidden');
-    $('#swap-form-page').removeClass('hidden').addClass('active');
+    $('#swap-form-page').removeClass('hidden').addClass('active').css({'animation': 'slideInUp 0.5s ease-out'});
   });
 
   // Proceed button
@@ -2084,7 +3166,7 @@ $(document).ready(function () {
     $('#status-xmr-addr').text((localStorage.getItem('swap_xmr_address') || '').substring(0, 20) + '...');
 
     $('.swap-step').removeClass('active').addClass('hidden');
-    $('#swap-status-page').removeClass('hidden').addClass('active');
+    $('#swap-status-page').removeClass('hidden').addClass('active').css({'animation': 'slideInUp 0.5s ease-out'});
   });
 
   // New transaction button
@@ -2096,26 +3178,29 @@ $(document).ready(function () {
     $('#receive-usd-value').text('≈ $0.00 USD');
     
     $('.swap-step').removeClass('active').addClass('hidden');
-    $('#swap-form-page').removeClass('hidden').addClass('active');
+    $('#swap-form-page').removeClass('hidden').addClass('active').css({'animation': 'slideInUp 0.5s ease-out'});
   });
 
-  // Theme Toggle
+  // Theme Toggle with smooth transition
   function toggleTheme() {
     const body = $('body');
     const navIcon = $('#theme-icon');
     const footerIcon = $('#footer-theme-icon');
     
-    if (body.hasClass('dark-mode')) {
-      body.removeClass('dark-mode').addClass('light-mode');
-      navIcon.removeClass('fa-moon').addClass('fa-sun');
-      footerIcon.removeClass('fa-moon').addClass('fa-sun');
-      localStorage.setItem('theme', 'light');
-    } else {
-      body.removeClass('light-mode').addClass('dark-mode');
-      navIcon.removeClass('fa-sun').addClass('fa-moon');
-      footerIcon.removeClass('fa-sun').addClass('fa-moon');
-      localStorage.setItem('theme', 'dark');
-    }
+    $('html').animate({'opacity': 0.8}, 200, function() {
+      if (body.hasClass('dark-mode')) {
+        body.removeClass('dark-mode').addClass('light-mode');
+        navIcon.removeClass('fa-moon').addClass('fa-sun');
+        footerIcon.removeClass('fa-moon').addClass('fa-sun');
+        localStorage.setItem('theme', 'light');
+      } else {
+        body.removeClass('light-mode').addClass('dark-mode');
+        navIcon.removeClass('fa-sun').addClass('fa-moon');
+        footerIcon.removeClass('fa-sun').addClass('fa-moon');
+        localStorage.setItem('theme', 'dark');
+      }
+      $('html').animate({'opacity': 1}, 200);
+    });
   }
   
   $('#theme-toggle, #footer-theme-toggle').on('click', toggleTheme);
@@ -2131,7 +3216,7 @@ $(document).ready(function () {
     footerIcon.removeClass('fa-moon').addClass('fa-sun');
   }
 
-  // Navigation
+  // Navigation with smooth transitions
   $('.nav-link, footer a[data-section]').on('click', function (e) {
     e.preventDefault();
     const section = $(this).data('section');
@@ -2140,8 +3225,15 @@ $(document).ready(function () {
     window.location.hash = section;
     $('.nav-link').removeClass('active');
     $(`.nav-link[data-section="${section}"]`).addClass('active');
-    $('.section').removeClass('active');
-    $(`#${section}`).addClass('active');
+    
+    // Smooth section transition
+    $('.section').fadeOut(300, function() {
+      $(this).removeClass('active');
+    });
+    
+    setTimeout(() => {
+      $(`#${section}`).addClass('active').fadeIn(300);
+    }, 150);
     
     if ($(window).width() < 768) {
       $('.nav-links').removeClass('active');
@@ -2149,7 +3241,7 @@ $(document).ready(function () {
     
     $('html, body').animate({
       scrollTop: $(`#${section}`).offset().top - 100
-    }, 500);
+    }, 600);
   });
 
   $('.faq-link').on('click', function(e) {
@@ -2158,8 +3250,13 @@ $(document).ready(function () {
     
     $('.nav-link').removeClass('active');
     $(`.nav-link[data-section="${section}"]`).addClass('active');
-    $('.section').removeClass('active');
-    $(`#${section}`).addClass('active');
+    $('.section').fadeOut(300, function() {
+      $(this).removeClass('active');
+    });
+    
+    setTimeout(() => {
+      $(`#${section}`).addClass('active').fadeIn(300);
+    }, 150);
     
     setTimeout(function() {
       const firstAccordionHeader = $('#contact .accordion-header').first();
@@ -2183,14 +3280,24 @@ $(document).ready(function () {
     $(`.nav-link[data-section="${hash}"]`).click();
   }
 
-  // Accordion
+  // Accordion with smooth animations
   $('.accordion-header').on('click', function () {
     const content = $(this).next('.accordion-content');
-    $('.accordion-content').not(content).removeClass('active');
-    content.toggleClass('active');
+    $('.accordion-content').not(content).slideUp(300, function() {
+      $(this).removeClass('active');
+    });
     
-    $('.accordion-header i').removeClass('fa-chevron-up').addClass('fa-chevron-down');
+    $('.accordion-header i').not($(this).find('i')).removeClass('fa-chevron-up').addClass('fa-chevron-down');
+    
     if (content.hasClass('active')) {
+      content.slideUp(300, function() {
+        $(this).removeClass('active');
+      });
+      $(this).find('i').removeClass('fa-chevron-up').addClass('fa-chevron-down');
+    } else {
+      content.slideDown(300, function() {
+        $(this).addClass('active');
+      });
       $(this).find('i').removeClass('fa-chevron-down').addClass('fa-chevron-up');
     }
   });
@@ -2198,46 +3305,95 @@ $(document).ready(function () {
   // Order workflow
   $('#escrow-form').on('submit', function (e) {
     e.preventDefault();
+    
+    // Validate form
+    const amount = parseFloat($('#transaction-amount').val());
+    if (isNaN(amount) || amount <= 0) {
+      alert('Please enter a valid transaction amount.');
+      return;
+    }
+    
+    if (amount < 0.0001) {
+      alert('Minimum transaction amount is 0.0001 BTC.');
+      return;
+    }
+    
+    // Store form data
     localStorage.setItem('escrow_role', $('input[name="role"]:checked').val());
     localStorage.setItem('escrow_counterparty', $('#counterparty-contact').val());
     localStorage.setItem('escrow_description', $('#transaction-description').val());
     localStorage.setItem('escrow_shipping', $('#shipping-address').val());
-    localStorage.setItem('escrow_amount', $('#transaction-amount').val());
+    localStorage.setItem('escrow_amount', amount.toFixed(8));
     
-    $('.order-step').removeClass('active').addClass('hidden');
-    $('#order-payment-page').removeClass('hidden').addClass('active');
+    // Transition to payment page with animation
+    $('.order-step').fadeOut(300, function() {
+      $(this).removeClass('active').addClass('hidden');
+    });
+    
+    setTimeout(() => {
+      $('#order-payment-page').removeClass('hidden').addClass('active').fadeIn(300);
+      $('html, body').animate({scrollTop: 0}, 300);
+    }, 150);
   });
   
   $('#order-back-btn').on('click', function() {
-    $('.order-step').removeClass('active').addClass('hidden');
-    $('#order-form-page').removeClass('hidden').addClass('active');
+    $('.order-step').fadeOut(300, function() {
+      $(this).removeClass('active').addClass('hidden');
+    });
+    
+    setTimeout(() => {
+      $('#order-form-page').removeClass('hidden').addClass('active').fadeIn(300);
+      $('html, body').animate({scrollTop: 0}, 300);
+    }, 150);
   });
 
   $('#order-proceed-btn').on('click', function () {
+    const escrowId = Math.floor(Math.random() * 90000000) + 10000000;
     localStorage.setItem('escrow_status', 'pending');
-    localStorage.setItem('escrow_id', Math.floor(Math.random() * 90000000) + 10000000);
+    localStorage.setItem('escrow_id', escrowId);
     
-    $('.order-step').removeClass('active').addClass('hidden');
-    $('#order-status-page').removeClass('hidden').addClass('active');
-    
+    // Update status page with form data
     $('#status-role').text(localStorage.getItem('escrow_role') || 'Buyer');
     $('#status-counterparty').text(localStorage.getItem('escrow_counterparty') || '-');
     $('#status-amount').text((localStorage.getItem('escrow_amount') || '0.00') + ' BTC');
     $('#status-description').text(localStorage.getItem('escrow_description') || '-');
-    $('#status-id').text(localStorage.getItem('escrow_id') || '25791364');
+    $('#status-id').text(escrowId);
+    
+    $('.order-step').fadeOut(300, function() {
+      $(this).removeClass('active').addClass('hidden');
+    });
+    
+    setTimeout(() => {
+      $('#order-status-page').removeClass('hidden').addClass('active').fadeIn(300);
+      $('html, body').animate({scrollTop: 0}, 300);
+    }, 150);
   });
   
   $('#order-start-over').on('click', function() {
-    $('.order-step').removeClass('active').addClass('hidden');
-    $('#order-form-page').removeClass('hidden').addClass('active');
-    $('#escrow-form')[0].reset();
+    $('.order-step').fadeOut(300, function() {
+      $(this).removeClass('active').addClass('hidden');
+    });
+    
+    setTimeout(() => {
+      $('#order-form-page').removeClass('hidden').addClass('active').fadeIn(300);
+      $('#escrow-form')[0].reset();
+      $('html, body').animate({scrollTop: 0}, 300);
+    }, 150);
   });
 
   $('#copy-wallet-btn').on('click', function() {
     const walletAddress = 'bc1qvrfgyfkcjm7us5azz8ag6qzdq9pzy5wsjf2e7r';
+    const btn = $(this);
+    const originalHtml = btn.html();
+    
     navigator.clipboard.writeText(walletAddress)
       .then(function() {
-        alert('Wallet address copied to clipboard!');
+        btn.html('<i class="fas fa-check mr-2"></i> Copied!');
+        btn.css({'background': 'rgba(0, 255, 136, 0.15)', 'border-color': 'rgba(0, 255, 136, 0.4)', 'color': '#00ff88'});
+        setTimeout(function() {
+          btn.html(originalHtml);
+          btn.css({'background': '', 'border-color': '', 'color': ''});
+        }, 2000);
       })
       .catch(function() {
         const tempInput = $('<input>');
@@ -2245,11 +3401,16 @@ $(document).ready(function () {
         tempInput.val(walletAddress).select();
         document.execCommand('copy');
         tempInput.remove();
-        alert('Wallet address copied to clipboard!');
+        btn.html('<i class="fas fa-check mr-2"></i> Copied!');
+        btn.css({'background': 'rgba(0, 255, 136, 0.15)', 'border-color': 'rgba(0, 255, 136, 0.4)', 'color': '#00ff88'});
+        setTimeout(function() {
+          btn.html(originalHtml);
+          btn.css({'background': '', 'border-color': '', 'color': ''});
+        }, 2000);
       });
   });
 
-  // Generate reviews
+  // Generate reviews with staggered animation
   function generateReviews() {
     const reviewsContainer = $('#reviews-container');
     reviewsContainer.empty();
@@ -2351,6 +3512,110 @@ $(document).ready(function () {
   }
 
   generateReviews();
+
+  // ───────────────────────────────────────────────
+  // CONTACT SECTION ENHANCEMENTS
+  // ───────────────────────────────────────────────
+
+  // Smooth scroll to support topics
+  $('.support-topic-card').on('click', function() {
+    const topic = $(this).find('h4').text();
+    const faqLink = $('#contact .accordion-header:contains("' + topic + '")').first();
+    
+    if (faqLink.length) {
+      $(this).css({'animation': 'pulse 0.6s ease-out'});
+      faqLink.click();
+      setTimeout(() => {
+        $('html, body').animate({
+          scrollTop: faqLink.offset().top - 200
+        }, 600);
+      }, 300);
+    }
+  });
+
+  // Enhance accordion with contact-specific styling
+  $('#contact .accordion-header').each(function() {
+    $(this).addClass('contact-accordion-header');
+    $(this).find('i').addClass('contact-accordion-icon');
+  });
+
+  // Enhanced accordion interaction
+  $('#contact .accordion-header').on('click', function(e) {
+    const isAlreadyActive = $(this).hasClass('active');
+    
+    $('#contact .accordion-header').removeClass('active');
+    $('#contact .accordion-content').not($(this).next()).slideUp(300, function() {
+      $(this).removeClass('active');
+    });
+
+    if (!isAlreadyActive) {
+      $(this).addClass('active');
+      $(this).next('.accordion-content').slideDown(300, function() {
+        $(this).addClass('active');
+      });
+    }
+
+    $(this).find('i').toggleClass('fa-chevron-up fa-chevron-down');
+  });
+
+  // Contact card hover animation
+  $('.contact-card').each(function() {
+    $(this).css({'animation': 'fadeInScale 0.6s ease-out'});
+  });
+
+  // Add staggered animation to support topic cards
+  $('.support-topic-card').each(function(index) {
+    $(this).css({'animation': `slideInUp 0.6s ease-out ${index * 0.1}s both`});
+  });
+
+  // Support metrics counter animation
+  function animateCounter(element, target, duration = 1500) {
+    const start = 0;
+    const increment = target / (duration / 16);
+    let current = start;
+
+    const counter = setInterval(() => {
+      current += increment;
+      if (current >= target) {
+        $(element).text(target);
+        clearInterval(counter);
+      } else {
+        $(element).text(Math.floor(current));
+      }
+    }, 16);
+  }
+
+  // Trigger counters when section becomes visible
+  const metricsObserver = new IntersectionObserver((entries) => {
+    entries.forEach(entry => {
+      if (entry.isIntersecting && !$(entry.target).hasClass('animated')) {
+        $(entry.target).addClass('animated');
+        
+        // Animate the numbers
+        animateCounter($(entry.target).find('.text-2xl')[0], parseInt($(entry.target).find('.text-2xl').text()) || 0);
+      }
+    });
+  }, { threshold: 0.5 });
+
+  // Observe metric cards
+  $('#contact .card:has(.text-sm:contains("Average"))').each(function() {
+    metricsObserver.observe(this);
+  });
+
+  // Observe elements and add animations on scroll
+  const observer = new IntersectionObserver((entries) => {
+    entries.forEach(entry => {
+      if (entry.isIntersecting) {
+        $(entry.target).css({'animation': 'slideInUp 0.6s ease-out'});
+        observer.unobserve(entry.target);
+      }
+    });
+  }, { threshold: 0.1 });
+
+  $('.card').each(function() {
+    observer.observe(this);
+  });
+
 });
 </script>
 
