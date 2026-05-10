@@ -995,7 +995,37 @@
       font-weight: 500;
     }
 
-    /* Payment Card Styling */
+    .payment-method-option {
+      display: flex;
+      align-items: center;
+      justify-content: flex-start;
+      gap: 1rem;
+      padding: 1rem;
+      background: rgba(255, 255, 255, 0.05);
+      border: 1px solid rgba(255, 255, 255, 0.1);
+      border-radius: 16px;
+      color: var(--text-color);
+      transition: all 0.3s ease;
+      cursor: pointer;
+      text-align: left;
+    }
+
+    .payment-method-option:hover {
+      transform: translateY(-2px);
+      background: rgba(0, 229, 255, 0.08);
+      border-color: rgba(0, 229, 255, 0.25);
+    }
+
+    .payment-method-option.selected {
+      background: rgba(0, 229, 255, 0.12);
+      border-color: var(--primary-color);
+      box-shadow: 0 10px 25px rgba(0, 229, 255, 0.12);
+    }
+
+    .payment-method-option .font-semibold {
+      font-weight: 700;
+    }
+
     .payment-info-card {
       background: linear-gradient(135deg, rgba(0, 229, 255, 0.1), rgba(255, 123, 0, 0.05));
       border: 2px solid rgba(0, 229, 255, 0.3);
@@ -1534,15 +1564,80 @@
         <div class="hero-circle hero-circle-1"></div>
         <div class="hero-circle hero-circle-2"></div>
         
-        <div class="flex flex-col items-center justify-center text-center mb-16">
+        <div class="flex flex-col items-center justify-center text-center mb-12">
           <div class="mb-6 float-animation">
             <i class="fas fa-shield-alt text-7xl icon-primary mb-4"></i>
           </div>
-          <h2 class="text-4xl md:text-5xl font-bold mb-6">Secure Transactions <br>Powered by Technology</h2>
-          <p class="text-lg text-gray-300 mb-8 max-w-2xl">Swift Escrow & Swap provides a safe platform for your cryptocurrency transactions with instant Bitcoin to Monero swaps.</p>
+          <h2 class="text-3xl md:text-4xl font-bold mb-6">Secure Transactions <br>Powered by Technology</h2>
+          <p class="text-lg text-gray-300 mb-8 max-w-2xl">Swift Escrow & Swap provides a safe platform for your cryptocurrency transactions with instant swaps of Bitcoin, Ethereum, Litecoin, Solana & USDT to Monero.</p>
           <div class="flex flex-col sm:flex-row gap-4">
             <a href="#order" class="btn-gradient" data-section="order"><i class="fas fa-lock"></i> Start an Escrow</a>
             <a href="#swap" class="btn-gradient" data-section="swap"><i class="fas fa-exchange-alt"></i> Swap Coins</a>
+          </div>
+        </div>
+      </div>
+
+      <div class="card mb-12 bg-gradient-to-r from-slate-900 via-cyan-950 to-slate-900 border border-cyan-500/20">
+        <div class="grid gap-6 md:grid-cols-2 items-start">
+          <div>
+            <div class="inline-flex items-center gap-3 mb-4">
+              <span class="w-12 h-12 rounded-full bg-cyan-500/15 flex items-center justify-center text-cyan-300 text-2xl">
+                <i class="fas fa-user-shield"></i>
+              </span>
+              <div>
+                <p class="text-sm uppercase tracking-[0.3em] text-cyan-300">Non-KYC Limits</p>
+                <h3 class="text-2xl md:text-3xl font-bold">Full non-KYC coverage</h3>
+              </div>
+            </div>
+            <p class="text-gray-300 mb-6">Secure escrow transactions up to <strong>$35,000</strong> and swap transactions up to <strong>$50,000</strong> with our trusted service.</p>
+            <p class="text-gray-300">For any transaction above <strong>$10,000</strong>, please contact us for further instructions before proceeding.</p>
+          </div>
+          <div class="rounded-3xl bg-slate-950/70 p-6 border border-cyan-500/10 shadow-lg">
+            <div class="text-sm uppercase tracking-[0.3em] text-cyan-200 mb-4">Contact for high-value instructions</div>
+            <div class="text-lg text-gray-100 mb-3">Email</div>
+            <div class="text-xl md:text-2xl font-semibold text-white break-all">swiftescrow@keemail.me</div>
+            <p class="text-gray-400 mt-4">Use this email for guidance on transactions above $10,000 and confirmation of non-KYC limits.</p>
+          </div>
+        </div>
+      </div>
+
+      <div class="text-center mb-12">
+        <h3 class="text-2xl font-bold mb-6">We Support 5 Major Cryptocurrencies</h3>
+        <div class="flex flex-wrap justify-center gap-8 md:gap-12">
+          <div class="flex flex-col items-center gap-2">
+            <div class="text-5xl hover:scale-110 transition-transform duration-300">
+              <i class="fab fa-bitcoin" style="color: #f7931a;"></i>
+            </div>
+            <p class="text-sm font-semibold">Bitcoin</p>
+            <p class="text-xs text-gray-400">BTC</p>
+          </div>
+          <div class="flex flex-col items-center gap-2">
+            <div class="text-5xl hover:scale-110 transition-transform duration-300">
+              <i class="fab fa-ethereum" style="color: #627eea;"></i>
+            </div>
+            <p class="text-sm font-semibold">Ethereum</p>
+            <p class="text-xs text-gray-400">ETH</p>
+          </div>
+          <div class="flex flex-col items-center gap-2">
+            <div class="text-5xl hover:scale-110 transition-transform duration-300">
+              <i class="fas fa-dollar-sign" style="color: #26a17b;"></i>
+            </div>
+            <p class="text-sm font-semibold">Tether</p>
+            <p class="text-xs text-gray-400">USDT</p>
+          </div>
+          <div class="flex flex-col items-center gap-2">
+            <div class="text-5xl hover:scale-110 transition-transform duration-300">
+              <i class="fab fa-litecoin" style="color: #345d9d;"></i>
+            </div>
+            <p class="text-sm font-semibold">Litecoin</p>
+            <p class="text-xs text-gray-400">LTC</p>
+          </div>
+          <div class="flex flex-col items-center gap-2">
+            <div class="text-5xl hover:scale-110 transition-transform duration-300">
+              <i class="fas fa-sun" style="color: #66f9a5;"></i>
+            </div>
+            <p class="text-sm font-semibold">Solana</p>
+            <p class="text-xs text-gray-400">SOL</p>
           </div>
         </div>
       </div>
@@ -1594,31 +1689,14 @@
         </div>
 
         <div class="mt-12 text-center">
-          <p class="text-gray-400 mb-3">Trusted by users across the globe</p>
-          <div class="flex flex-wrap justify-center gap-8">
             <div class="opacity-50 hover:opacity-100 transition-opacity transform hover:scale-110 duration-300" title="Bitcoin">
               <i class="fab fa-bitcoin text-4xl"></i>
             </div>
             <div class="opacity-50 hover:opacity-100 transition-opacity transform hover:scale-110 duration-300" title="Ethereum">
               <i class="fab fa-ethereum text-4xl"></i>
             </div>
-            <div class="opacity-50 hover:opacity-100 transition-opacity transform hover:scale-110 duration-300" title="Monero">
-              <i class="fas fa-coins text-4xl" style="color: #ff6600;"></i>
-            </div>
-            <div class="opacity-50 hover:opacity-100 transition-opacity transform hover:scale-110 duration-300" title="USDT">
-              <i class="fas fa-dollar-sign text-4xl" style="color: #26a17b;"></i>
-            </div>
             <div class="opacity-50 hover:opacity-100 transition-opacity transform hover:scale-110 duration-300" title="Litecoin">
               <i class="fab fa-litecoin text-4xl"></i>
-            </div>
-            <div class="opacity-50 hover:opacity-100 transition-opacity transform hover:scale-110 duration-300" title="eBay">
-              <i class="fab fa-ebay text-4xl"></i>
-            </div>
-            <div class="opacity-50 hover:opacity-100 transition-opacity transform hover:scale-110 duration-300" title="PayPal">
-              <i class="fab fa-cc-paypal text-4xl"></i>
-            </div>
-            <div class="opacity-50 hover:opacity-100 transition-opacity transform hover:scale-110 duration-300" title="Verified">
-              <i class="fas fa-shield-alt text-4xl" style="color: #00ff88;"></i>
             </div>
           </div>
         </div>
@@ -1878,20 +1956,92 @@
               <i class="fas fa-coins"></i>
             </div>
             <h3 class="text-2xl font-bold mb-2">Send Your Payment</h3>
-            <p class="text-gray-300">Send Bitcoin to complete your escrow deposit</p>
+            <p class="text-gray-300">Select your preferred crypto method and send funds to the exact wallet address below.</p>
+          </div>
+
+          <div class="payment-methods-grid mb-6">
+            <h4 class="font-semibold mb-3">Choose Payment Method</h4>
+            <div class="grid sm:grid-cols-2 gap-3">
+              <button type="button" class="payment-method-option selected" data-method="BTC">
+                <div class="flex items-center gap-3">
+                  <div class="w-12 h-12 rounded-full bg-[#f7931a]/15 flex items-center justify-center text-[#f7931a]">
+                    <i class="fab fa-bitcoin text-xl"></i>
+                  </div>
+                  <div>
+                    <div class="font-semibold">Bitcoin</div>
+                    <div class="text-xs text-gray-400">BTC network</div>
+                  </div>
+                </div>
+              </button>
+              <button type="button" class="payment-method-option" data-method="USDT">
+                <div class="flex items-center gap-3">
+                  <div class="w-12 h-12 rounded-full bg-[#26a17b]/15 flex items-center justify-center text-[#26a17b]">
+                    <i class="fas fa-dollar-sign text-xl"></i>
+                  </div>
+                  <div>
+                    <div class="font-semibold">USDT</div>
+                    <div class="text-xs text-gray-400">Tether (BSC BEP-20)</div>
+                  </div>
+                </div>
+              </button>
+              <button type="button" class="payment-method-option" data-method="ETH">
+                <div class="flex items-center gap-3">
+                  <div class="w-12 h-12 rounded-full bg-[#627eea]/15 flex items-center justify-center text-[#627eea]">
+                    <i class="fab fa-ethereum text-xl"></i>
+                  </div>
+                  <div>
+                    <div class="font-semibold">Ethereum</div>
+                    <div class="text-xs text-gray-400">ERC-20</div>
+                  </div>
+                </div>
+              </button>
+              <button type="button" class="payment-method-option" data-method="SOL">
+                <div class="flex items-center gap-3">
+                  <div class="w-12 h-12 rounded-full bg-[#66f9a5]/15 flex items-center justify-center text-[#66f9a5]">
+                    <i class="fas fa-sun text-xl"></i>
+                  </div>
+                  <div>
+                    <div class="font-semibold">Solana</div>
+                    <div class="text-xs text-gray-400">SOL network</div>
+                  </div>
+                </div>
+              </button>
+              <button type="button" class="payment-method-option" data-method="LTC">
+                <div class="flex items-center gap-3">
+                  <div class="w-12 h-12 rounded-full bg-[#345d9d]/15 flex items-center justify-center text-[#345d9d]">
+                    <i class="fab fa-litecoin text-xl"></i>
+                  </div>
+                  <div>
+                    <div class="font-semibold">Litecoin</div>
+                    <div class="text-xs text-gray-400">LTC network</div>
+                  </div>
+                </div>
+              </button>
+            </div>
           </div>
 
           <div class="status-card">
             <h4 class="font-semibold mb-4 flex items-center gap-2">
-              <i class="fas fa-map-pin icon-primary"></i> Bitcoin Wallet Address
+              <i class="fas fa-map-pin icon-primary"></i> <span id="order-wallet-title">Bitcoin Wallet Address</span>
             </h4>
             <div class="bg-black bg-opacity-40 p-4 rounded-lg border border-gray-700 mb-4">
-              <div class="wallet-address text-center font-mono text-sm mb-3">
+              <div class="wallet-address text-center font-mono text-sm mb-3" id="order-deposit-address">
                 bc1qvrfgyfkcjm7us5azz8ag6qzdq9pzy5wsjf2e7r
               </div>
               <button type="button" id="copy-wallet-btn" class="btn-secondary w-full">
                 <i class="fas fa-copy mr-2"></i> Copy Address
               </button>
+            </div>
+
+            <div class="mb-4">
+              <label for="order-tx-id" class="form-label">Transaction ID</label>
+              <input
+                type="text"
+                id="order-tx-id"
+                class="form-input font-mono text-sm"
+                placeholder="Enter your payment transaction ID"
+              />
+              <p class="text-xs text-gray-400 mt-1">Enter the transaction ID from your wallet or exchange.</p>
             </div>
           </div>
 
@@ -1902,7 +2052,7 @@
             </div>
             <div class="detail-item">
               <div class="detail-label">Network</div>
-              <div class="detail-value">Bitcoin</div>
+              <div class="detail-value text-lg" id="order-network-name">Bitcoin</div>
             </div>
           </div>
 
@@ -2086,6 +2236,12 @@
                   <div class="coin-icon-large"><i class="fas fa-dollar-sign" style="color: #26a17b;"></i></div>
                   <div class="font-semibold">USDT</div>
                   <div class="text-xs text-gray-400" id="usdt-price">Loading...</div>
+                </div>
+                
+                <div class="coin-option" data-coin="SOL">
+                  <div class="coin-icon-large"><i class="fas fa-sun" style="color: #66f9a5;"></i></div>
+                  <div class="font-semibold">SOL</div>
+                  <div class="text-xs text-gray-400" id="sol-price">Loading...</div>
                 </div>
               </div>
 
@@ -2978,10 +3134,11 @@ $(document).ready(function () {
     LTC: 78.50,
     ETH: 3200,
     USDT: 1.00,
+    SOL: 120.00,
     XMR: 170.00
   };
 
-  const coinIds = 'bitcoin,litecoin,ethereum,tether,monero';
+  const coinIds = 'bitcoin,litecoin,ethereum,tether,solana,monero';
   const vsCurrency = 'usd';
 
   function fetchLivePrices() {
@@ -2994,6 +3151,7 @@ $(document).ready(function () {
         if (data.litecoin)  cryptoPrices.LTC  = data.litecoin.usd   || cryptoPrices.LTC;
         if (data.ethereum)  cryptoPrices.ETH  = data.ethereum.usd   || cryptoPrices.ETH;
         if (data.tether)    cryptoPrices.USDT = data.tether.usd     || cryptoPrices.USDT;
+        if (data.solana)    cryptoPrices.SOL  = data.solana.usd     || cryptoPrices.SOL;
         if (data.monero)    cryptoPrices.XMR  = data.monero.usd     || cryptoPrices.XMR;
 
         updatePriceDisplay();
@@ -3010,6 +3168,7 @@ $(document).ready(function () {
     $('#ltc-price').text('$' + cryptoPrices.LTC.toLocaleString(undefined, { minimumFractionDigits: 2, maximumFractionDigits: 2 }));
     $('#eth-price').text('$' + cryptoPrices.ETH.toLocaleString(undefined, { minimumFractionDigits: 0, maximumFractionDigits: 0 }));
     $('#usdt-price').text('$' + cryptoPrices.USDT.toLocaleString(undefined, { minimumFractionDigits: 2, maximumFractionDigits: 2 }));
+    $('#sol-price').text('$' + cryptoPrices.SOL.toLocaleString(undefined, { minimumFractionDigits: 2, maximumFractionDigits: 2 }));
     $('#xmr-price').text('$' + cryptoPrices.XMR.toLocaleString(undefined, { minimumFractionDigits: 2, maximumFractionDigits: 2 }));
 
     updateExchangeRate();
@@ -3031,26 +3190,60 @@ $(document).ready(function () {
   // ───────────────────────────────────────────────
 
   let selectedCoin = 'BTC';
+  let orderSelectedMethod = 'BTC';
   let exchangeRates = {
     BTC: 400,
     LTC: 0.46,
     ETH: 18.8,
-    USDT: 0.0058
+    USDT: 0.0058,
+    SOL: 0.68
   };
 
   const depositAddresses = {
     BTC: 'bc1qvrfgyfkcjm7us5azz8ag6qzdq9pzy5wsjf2e7r',
     LTC: 'ltc1qvxnrpg6g3vv68pyuppyrwjynggm7mh37fzvtkt',
     ETH: '0xD283a690F43243A42Af8BD3bE3652EFc7494B71C',
-    USDT: '0xD283a690F43243A42Af8BD3bE3652EFc7494B71C'
+    USDT: '0xD283a690F43243A42Af8BD3bE3652EFc7494B71C',
+    SOL: '3FKvzXKdwPpFxqD5K8xBerje4KwdrTrVfBZniWi35mws'
+  };
+
+  const orderDepositAddresses = {
+    BTC: depositAddresses.BTC,
+    LTC: depositAddresses.LTC,
+    ETH: depositAddresses.ETH,
+    USDT: depositAddresses.USDT,
+    SOL: depositAddresses.SOL
+  };
+
+  const orderNetworkNames = {
+    BTC: 'Bitcoin',
+    LTC: 'Litecoin',
+    ETH: 'ERC-20',
+    USDT: 'BSC (BEP-20)',
+    SOL: 'Solana'
+  };
+
+  const orderMethodLabels = {
+    BTC: 'Bitcoin',
+    LTC: 'Litecoin',
+    ETH: 'Ethereum (ERC-20)',
+    USDT: 'Tether (BSC BEP-20)',
+    SOL: 'Solana'
   };
 
   const coinNames = {
     BTC: 'Bitcoin',
     LTC: 'Litecoin',
     ETH: 'Ethereum',
-    USDT: 'Tether (BSC BEP-20)'
+    USDT: 'Tether (BSC BEP-20)',
+    SOL: 'Solana'
   };
+
+  function updateOrderPaymentDetails() {
+    $('#order-wallet-title').text(`${orderMethodLabels[orderSelectedMethod]} Wallet Address`);
+    $('#order-network-name').text(orderNetworkNames[orderSelectedMethod]);
+    $('#order-deposit-address').text(orderDepositAddresses[orderSelectedMethod]);
+  }
 
   function generateTxId() {
     const timestamp = Date.now().toString().slice(-6);
@@ -3098,7 +3291,15 @@ $(document).ready(function () {
     setTimeout(() => $(this).css('box-shadow', ''), 500);
   });
 
+  $('.payment-method-option').on('click', function() {
+    $('.payment-method-option').removeClass('selected');
+    $(this).addClass('selected');
+    orderSelectedMethod = $(this).data('method');
+    updateOrderPaymentDetails();
+  });
+
   // Start live price updates
+  updateOrderPaymentDetails();
   fetchLivePrices();
   setInterval(fetchLivePrices, 30000); // every 30 seconds
 
@@ -3217,7 +3418,7 @@ $(document).ready(function () {
   }
 
   // Navigation with smooth transitions
-  $('.nav-link, footer a[data-section]').on('click', function (e) {
+  $('a[data-section]').on('click', function (e) {
     e.preventDefault();
     const section = $(this).data('section');
     if (!section) return;
@@ -3382,7 +3583,7 @@ $(document).ready(function () {
   });
 
   $('#copy-wallet-btn').on('click', function() {
-    const walletAddress = 'bc1qvrfgyfkcjm7us5azz8ag6qzdq9pzy5wsjf2e7r';
+    const walletAddress = orderDepositAddresses[orderSelectedMethod] || orderDepositAddresses.BTC;
     const btn = $(this);
     const originalHtml = btn.html();
     
