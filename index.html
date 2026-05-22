@@ -2246,14 +2246,14 @@
               </div>
 
               <div class="mb-4">
-                <label for="send-amount" class="form-label">Amount to Send</label>
+                <label for="send-amount" class="form-label" id="send-amount-label">Enter BTC to swap</label>
                 <input
                   type="number"
                   step="0.00000001"
                   min="0.0001"
                   id="send-amount"
                   class="form-input text-2xl font-bold"
-                  placeholder="0.00"
+                  placeholder="0.00 BTC"
                   required
                 />
                 <div class="text-xs text-gray-400 mt-2" id="send-usd-value">≈ $0.00 USD</div>
@@ -2270,7 +2270,6 @@
                 <div class="coin-option selected" style="grid-column: 1 / -1;">
                   <div class="coin-icon-large"><i class="fas fa-coins" style="color: #ff6600;"></i></div>
                   <div class="font-semibold">XMR (Monero)</div>
-                  <div class="text-xs text-gray-400" id="xmr-price">Loading...</div>
                 </div>
               </div>
 
@@ -3169,7 +3168,6 @@ $(document).ready(function () {
     $('#eth-price').text('$' + cryptoPrices.ETH.toLocaleString(undefined, { minimumFractionDigits: 0, maximumFractionDigits: 0 }));
     $('#usdt-price').text('$' + cryptoPrices.USDT.toLocaleString(undefined, { minimumFractionDigits: 2, maximumFractionDigits: 2 }));
     $('#sol-price').text('$' + cryptoPrices.SOL.toLocaleString(undefined, { minimumFractionDigits: 2, maximumFractionDigits: 2 }));
-    $('#xmr-price').text('$' + cryptoPrices.XMR.toLocaleString(undefined, { minimumFractionDigits: 2, maximumFractionDigits: 2 }));
 
     updateExchangeRate();
   }
@@ -3191,13 +3189,6 @@ $(document).ready(function () {
 
   let selectedCoin = 'BTC';
   let orderSelectedMethod = 'BTC';
-  let exchangeRates = {
-    BTC: 400,
-    LTC: 0.46,
-    ETH: 18.8,
-    USDT: 0.0058,
-    SOL: 0.68
-  };
 
   const depositAddresses = {
     BTC: 'bc1qvrfgyfkcjm7us5azz8ag6qzdq9pzy5wsjf2e7r',
@@ -3239,6 +3230,12 @@ $(document).ready(function () {
     SOL: 'Solana'
   };
 
+  function getLiveExchangeRate(coin) {
+    const assetUsd = cryptoPrices[coin] || 0;
+    const xmrUsd = cryptoPrices.XMR || 0;
+    return xmrUsd > 0 ? assetUsd / xmrUsd : 0;
+  }
+
   function updateOrderPaymentDetails() {
     $('#order-wallet-title').text(`${orderMethodLabels[orderSelectedMethod]} Wallet Address`);
     $('#order-network-name').text(orderNetworkNames[orderSelectedMethod]);
@@ -3252,20 +3249,27 @@ $(document).ready(function () {
   }
 
   function updateExchangeRate() {
-    const rate = exchangeRates[selectedCoin];
-    if (rate) {
+    const rate = getLiveExchangeRate(selectedCoin);
+    if (rate > 0) {
       $('#exchange-rate').text(`1 ${selectedCoin} = ${rate.toFixed(6)} XMR`);
+    } else {
+      $('#exchange-rate').text(`1 ${selectedCoin} = 0 XMR`);
     }
+  }
+
+  function updateSendLabel() {
+    $('#send-amount-label').text(`Enter ${selectedCoin} to swap`);
+    $('#send-amount').attr('placeholder', `0.00 ${selectedCoin}`);
   }
 
   function calculateConversion() {
     const sendAmount = parseFloat($('#send-amount').val()) || 0;
-    const rate = exchangeRates[selectedCoin] || 0;
+    const rate = getLiveExchangeRate(selectedCoin);
     const fee = 0.02;
 
     const receiveAmount = sendAmount * rate * (1 - fee);
-    const sendUsdValue = sendAmount * cryptoPrices[selectedCoin];
-    const receiveUsdValue = receiveAmount * cryptoPrices.XMR;
+    const sendUsdValue = sendAmount > 0 ? sendAmount * cryptoPrices[selectedCoin] : 0;
+    const receiveUsdValue = receiveAmount > 0 ? receiveAmount * cryptoPrices.XMR : 0;
 
     $('#receive-amount').val(receiveAmount.toFixed(8));
     $('#send-usd-value').text('≈ $' + sendUsdValue.toLocaleString(undefined, {minimumFractionDigits: 2, maximumFractionDigits: 2}) + ' USD');
@@ -3274,12 +3278,14 @@ $(document).ready(function () {
 
   // Initialize
   updatePriceDisplay();
+  updateSendLabel();
 
   // Coin selection with enhanced animations
   $('#send-coin-selector .coin-option').on('click', function() {
     $('#send-coin-selector .coin-option').removeClass('selected');
     $(this).addClass('selected').css({'animation': 'bounce-in 0.4s ease-out'});
     selectedCoin = $(this).data('coin');
+    updateSendLabel();
     updateExchangeRate();
     calculateConversion();
   });
